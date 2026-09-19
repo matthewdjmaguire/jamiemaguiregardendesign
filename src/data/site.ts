@@ -1,12 +1,12 @@
 // Site-wide facts. Change them here and every page updates.
 //
 // headerStyle switches the top menu design:
-//   'solid'   white banner with the links on it, hero image below (default)
-//   'overlay' hero image runs to the very top of the page with white links on top of it
+//   'solid'   white banner with the links on it, hero image below
+//   'overlay' hero image runs to the very top of the page with white links on top of it (default)
 export type HeaderStyle = 'solid' | 'overlay';
 
 export const site = {
-  headerStyle: 'solid' as HeaderStyle,
+  headerStyle: 'overlay' as HeaderStyle,
   name: 'Jamie Maguire',
   business: 'Jamie Maguire Garden Design',
   url: 'https://jamiemaguiregardendesign.com',
