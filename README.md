@@ -25,7 +25,7 @@ npm run dev        # http://localhost:4321
 
 | To change | Edit |
 |---|---|
-| Name, email, Instagram, menu, service names | `src/data/site.ts` |
+| Name, email, Instagram, menu, service names, **top-menu style** (`headerStyle`: `'solid'` or `'overlay'`) | `src/data/site.ts` |
 | Colours, fonts sizes, spacing | `src/styles/tokens.css` |
 | Portfolio projects | `src/content/projects/*.md` (images in `src/assets/`) |
 | Page copy | `src/pages/*.astro` |

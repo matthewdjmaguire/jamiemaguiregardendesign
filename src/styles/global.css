@@ -82,6 +82,34 @@ a:hover { color: var(--olive-900); }
   .nav-list a { padding: 0.8rem 0; }
 }
 
+/* Header style toggle (site.headerStyle in src/data/site.ts).
+   'overlay': on pages that open with a hero image, the header floats over the image in white.
+   Pages without a hero (privacy, 404) keep the solid header, because white text on white would vanish. */
+[data-header='overlay']:has(main > .hero:first-child) .site-header {
+  position: absolute; inset: 0 0 auto 0; z-index: 10; background: transparent; border-bottom: 0;
+}
+/* Soft dark fade behind the links so they stay readable over bright parts of a photo (e.g. sky). */
+[data-header='overlay']:has(main > .hero:first-child) .site-header::before {
+  content: ''; position: absolute; inset: 0 0 -1.5rem; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, rgb(30 40 27 / 0.6), transparent);
+}
+[data-header='overlay']:has(main > .hero:first-child) .brand,
+[data-header='overlay']:has(main > .hero:first-child) .brand small,
+[data-header='overlay']:has(main > .hero:first-child) .nav-list a { color: var(--white); }
+[data-header='overlay']:has(main > .hero:first-child) .brand:hover { color: var(--sage-300); }
+[data-header='overlay']:has(main > .hero:first-child) .nav-list a::after { background: var(--white); }
+[data-header='overlay']:has(main > .hero:first-child) .nav-toggle { border-color: var(--white); color: var(--white); }
+[data-header='overlay']:has(main > .hero:first-child) .site-header :focus-visible { outline-color: var(--white); }
+/* The hero now starts at the very top, so push its text down by the header's height. */
+[data-header='overlay']:has(main > .hero:first-child) .hero__inner { padding-top: calc(5rem + clamp(3rem, 7vw, 5.5rem)); }
+[data-header='overlay']:has(main > .hero--large:first-child) .hero__inner { padding-top: calc(5rem + clamp(4rem, 12vw, 9rem)); }
+@media (max-width: 760px) {
+  /* The mobile dropdown is a white panel, so its links go back to dark. */
+  [data-header='overlay']:has(main > .hero:first-child) .site-nav .nav-list a { color: var(--ink); }
+  [data-header='overlay']:has(main > .hero:first-child) .site-nav .nav-list a::after { background: var(--olive-700); }
+  [data-header='overlay']:has(main > .hero:first-child) .site-nav :focus-visible { outline-color: var(--olive-900); }
+}
+
 /* Hero: image with a dark wash so overlaid text always meets contrast. */
 .hero { position: relative; color: var(--white); overflow: hidden; isolation: isolate; background: var(--olive-900); }
 .hero__media { position: absolute; inset: 0; z-index: -2; }
@@ -177,6 +205,12 @@ a:hover { color: var(--olive-900); }
 .site-footer a { color: var(--white); }
 .site-footer a:hover { color: var(--sage-300); }
 .footer-grid { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); align-items: start; }
+.site-footer a { overflow-wrap: anywhere; } /* long email address wraps instead of spilling into the next column */
+@media (min-width: 900px) {
+  /* Wider middle column for the email address; the logo column shrinks to the logo and sits at the right edge. */
+  .footer-grid { grid-template-columns: 1.2fr 0.6fr 1.4fr auto; }
+  .footer-grid > :last-child { justify-self: end; }
+}
 .site-footer h2 { font-size: var(--text-lg); color: var(--white); }
 .site-footer ul { list-style: none; margin: 0; padding: 0; }
 .site-footer li { margin-bottom: 0.4rem; }
