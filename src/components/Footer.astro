@@ -1,0 +1,36 @@
+---
+import { site } from '../data/site';
+import LcgdBadge from './LcgdBadge.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h2>{site.business}</h2>
+        <p>{site.tagline}. Serving {site.area}.</p>
+      </div>
+      <div>
+        <h2>Explore</h2>
+        <ul>
+          {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>Get in touch</h2>
+        <ul>
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a href={site.instagram.url} rel="noopener">Instagram {site.instagram.handle}</a></li>
+        </ul>
+      </div>
+      <div>
+        <LcgdBadge class="footer-logo" />
+      </div>
+    </div>
+    <p class="footer-legal">
+      &copy; {year} {site.business}. <a href="/privacy">Privacy</a>
+    </p>
+  </div>
+</footer>

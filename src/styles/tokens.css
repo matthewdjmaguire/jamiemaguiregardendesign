@@ -1,0 +1,42 @@
+/* Design tokens: the single place to change colour, type and spacing.
+   Sage is used for backgrounds and highlights only; text uses --ink / --olive-700
+   because sage on white fails WCAG AA contrast (checked by `npm run check:contrast`). */
+:root {
+  /* Colour */
+  --white: #ffffff;
+  --paper: #f6f5ef;      /* warm off-white for alternate sections */
+  --sage-100: #e6ecdd;   /* soft sage wash */
+  --sage-300: #c5d1b6;   /* sage banner */
+  --sage-500: #8ea27c;   /* highlight / decorative only, never text */
+  --olive-700: #46583a;  /* buttons, links, accents */
+  --olive-900: #26331f;  /* hover state, borders, dark banners */
+  --ink: #1e281b;        /* body text */
+  --muted: #536048;      /* secondary text */
+  --error: #8a1c1c;      /* form errors */
+  --error-bg: #fdf3f3;
+  --error-ink: #5c1010;
+
+  /* Type */
+  --font-heading: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-body: 'Jost', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: clamp(1.15rem, 1.05rem + 0.4vw, 1.35rem);
+  --text-xl: clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem);
+  --text-2xl: clamp(2.1rem, 1.6rem + 2.2vw, 3.2rem);
+  --text-hero: clamp(2.6rem, 1.8rem + 4vw, 5rem);
+
+  /* Spacing (8px base) */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 5rem;
+
+  /* Layout */
+  --container: 72rem;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --radius: 2px;
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+}

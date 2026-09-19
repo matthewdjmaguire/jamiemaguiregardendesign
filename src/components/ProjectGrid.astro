@@ -1,0 +1,36 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+  // true: tiles are buttons that open <ProjectLightbox> (render that too). false: tiles link to /projects.
+  lightbox?: boolean;
+}
+
+const { projects, lightbox = false } = Astro.props;
+---
+
+<div class="grid">
+  {
+    projects.map((project) => {
+      const cover = project.data.images[0];
+      const inner = (
+        <>
+          <Image src={cover.src} alt={cover.alt} widths={[400, 700, 1000]} sizes="(min-width: 1000px) 33vw, (min-width: 640px) 50vw, 100vw" loading="lazy" />
+          <span class="tile__caption">
+            <strong>{project.data.title}</strong>
+            {project.data.location}
+          </span>
+        </>
+      );
+      return lightbox ? (
+        <button class="tile" type="button" data-lightbox-open={project.id} aria-haspopup="dialog">
+          {inner}
+        </button>
+      ) : (
+        <a class="tile" href="/projects">{inner}</a>
+      );
+    })
+  }
+</div>

@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout title="Privacy" description="How Jamie Maguire Garden Design handles the details you send through this website.">
+  <section class="section">
+    <div class="container container--narrow">
+      <h1>Privacy notice</h1>
+      <p class="lead">Short version: I only use your details to reply to you.</p>
+
+      <h2>What I collect</h2>
+      <p>
+        If you use the contact form, I receive the name, email address and message you type. This website sets no
+        cookies and does not track visitors.
+      </p>
+
+      <h2>How it is used</h2>
+      <p>
+        Your message is emailed to me (via the email service Resend, which delivers it to my inbox) so that I can
+        reply. It is not stored on this website, not shared for marketing and not sold.
+      </p>
+
+      <h2>How long I keep it</h2>
+      <p>I keep enquiry emails for as long as needed to deal with your enquiry and any work that follows.</p>
+
+      <h2>Your rights</h2>
+      <p>
+        Under UK data protection law you can ask to see, correct or delete the personal information I hold about you.
+        Email <a href={`mailto:${site.email}`}>{site.email}</a> and I will help.
+      </p>
+      <p>You can also complain to the Information Commissioner's Office at ico.org.uk.</p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryBlock from '../components/EnquiryBlock.astro';
+import heroImage from '../assets/photos/about.jpg';
+
+import { site } from '../data/site';
+
+const steps = [
+  { title: 'Conversation', text: 'We talk about your garden, how you use it and what you would like from it.' },
+  { title: 'Site and brief', text: 'I look closely at the space and agree a clear brief with you.' },
+  { title: 'Concept design', text: 'I develop a design idea for you to react to, and we refine it together.' },
+  { title: 'Detailed design', text: 'The agreed concept becomes detailed plans and a planting scheme.' },
+  { title: 'Bringing it to life', text: 'Guidance as the garden is built and planted, so the design is carried through.' },
+];
+---
+
+<BaseLayout title="Services and Process" description="Garden design services from Jamie Maguire: consultation, planting design and full garden design, and how the process works.">
+  <PageHero image={heroImage} eyebrow="Services & process" title="Design that fits you and your garden" />
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Services</p>
+        <h2>Three ways to work together</h2>
+      </div>
+      {
+        site.services.map((s) => (
+          <div class="service-detail" id={s.id}>
+            <h3>{s.title}</h3>
+            <div>
+              <p>{s.body}</p>
+              <ul>{s.points.map((p) => <li>{p}</li>)}</ul>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Process</p>
+        <h2>How it works</h2>
+        <p class="lead">A clear, unhurried process, so you know what happens next at every stage.</p>
+      </div>
+      <ol class="steps">
+        {steps.map((s) => <li><h3>{s.title}</h3><p>{s.text}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <EnquiryBlock />
+</BaseLayout>

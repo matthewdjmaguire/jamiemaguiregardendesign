@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryBlock from '../components/EnquiryBlock.astro';
+import { site } from '../data/site';
+import aboutImage from '../assets/photos/about.jpg';
+import LcgdBadge from '../components/LcgdBadge.astro';
+---
+
+<BaseLayout title="About" description="About Jamie Maguire: a garden designer trained at the London College of Garden Design, creating thoughtful, elegant and liveable gardens.">
+  <PageHero image={aboutImage} eyebrow="About" title="Design led by how a garden is lived in" />
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <p class="lead">
+          I came to garden design after twenty years in commercial property law. Law taught me to listen carefully,
+          to manage detail and to keep a project moving. Design is where I wanted to use those skills.
+        </p>
+        <p>
+          I grew up in West Sussex, where a love of plants and landscape started early. I studied Design Technology at
+          A Level and History of Art at Edinburgh University, and later trained at the London College of Garden Design,
+          graduating with a Garden Design Diploma (Merit Commended).
+        </p>
+        <p>
+          My aim is to create thoughtful, elegant and liveable gardens that suit modern life and a changing
+          environment. That means classic design principles, sustainable materials, seasonal planting, biodiversity and
+          climate resilience, all grounded in horticultural knowledge.
+        </p>
+        <div class="btn-row">
+          <a class="btn" href="/contact">Get in touch</a>
+          <a class="btn btn--outline" href="/projects">See projects</a>
+        </div>
+      </div>
+      <aside class="panel" aria-labelledby="at-a-glance">
+        <h2 id="at-a-glance">At a glance</h2>
+        <ul>
+          <li>Garden Design Diploma, London College of Garden Design (Merit Commended)</li>
+          <li>Previously two decades in commercial property law</li>
+          <li>Working across {site.area}</li>
+        </ul>
+        <p class="panel__logo"><LcgdBadge /></p>
+      </aside>
+    </div>
+  </section>
+
+  <EnquiryBlock />
+</BaseLayout>
