@@ -27,7 +27,8 @@ export async function POST(request: Request): Promise<Response> {
   if (typeof data.website === 'string' && data.website.trim() !== '') return json({ ok: true });
 
   const result = validateEnquiry(data);
-  if (!result.ok) return json({ error: 'Please check the form.', errors: result.errors }, 400);
+  // `=== false` (not `!result.ok`) so TypeScript narrows the result even without strict mode, as on Vercel's build.
+  if (result.ok === false) return json({ error: 'Please check the form.', errors: result.errors }, 400);
   const { name, email, message } = result.value;
 
   const apiKey = process.env.RESEND_API_KEY;
