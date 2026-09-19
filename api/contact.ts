@@ -7,6 +7,9 @@ import { validateEnquiry, singleLine } from '../src/lib/contact-validation.js';
 
 const MAX_BODY_BYTES = 20_000;
 
+// Environment variables. Read via globalThis with a small type so the build type-checks without adding @types/node as a dependency.
+const env = (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env ?? {};
+
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
 
@@ -31,11 +34,11 @@ export async function POST(request: Request): Promise<Response> {
   if (result.ok === false) return json({ error: 'Please check the form.', errors: result.errors }, 400);
   const { name, email, message } = result.value;
 
-  const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.CONTACT_TO;
+  const apiKey = env.RESEND_API_KEY;
+  const to = env.CONTACT_TO;
   if (!apiKey || !to) return json({ error: 'The contact form is not switched on yet.' }, 503);
 
-  const from = process.env.CONTACT_FROM || 'Website enquiry <enquiries@jamiemaguiregardendesign.com>';
+  const from = env.CONTACT_FROM || 'Website enquiry <enquiries@jamiemaguiregardendesign.com>';
 
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
