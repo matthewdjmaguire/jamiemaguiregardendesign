@@ -119,8 +119,8 @@ a:hover { color: var(--olive-900); }
 .lightbox::backdrop { background: rgb(20 28 17 / 0.94); }
 .lightbox__inner { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; padding: var(--space-3); gap: var(--space-2); }
 .lightbox__stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; }
-.lightbox__stage img { max-width: 100%; max-height: calc(100dvh - 10rem); width: auto; height: auto; object-fit: contain; }
-.lightbox figure { margin: 0; display: none; max-height: 100%; }
+.lightbox__stage img { width: 100%; height: calc(100dvh - 10rem); object-fit: contain; } /* fill the space; contain keeps the whole photo visible */
+.lightbox figure { margin: 0; display: none; width: 100%; }
 .lightbox figure[data-active='true'] { display: block; }
 .lightbox__meta { text-align: center; max-width: 44rem; margin-inline: auto; }
 .lightbox__meta h2 { color: var(--white); margin-bottom: 0.25rem; font-size: var(--text-xl); }

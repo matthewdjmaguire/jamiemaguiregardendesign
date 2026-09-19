@@ -11,8 +11,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "node --test \"tests/*.test.mjs\"",
-    "check:contrast": "node scripts/check-contrast.mjs",
-    "placeholders": "node scripts/make-placeholders.mjs"
+    "check:contrast": "node scripts/check-contrast.mjs"
   },
   "dependencies": {
     "astro": "^7.3.3"

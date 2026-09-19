@@ -21,7 +21,7 @@
 ---
 
 ## Content model
-- Portfolio projects live in `src/content/projects/*.md` (frontmatter: title, location, year, summary, images[] with alt text; the first image is the cover). Placeholder images live in `src/assets/placeholders/`. Keep this structure so a Git-based CMS can be added later.
+- Portfolio projects live in `src/content/projects/*.md` (frontmatter: title, location, year, summary, images[] with alt text; the first image is the cover). Photos live in `src/assets/photos/`; the current ones are temporary CC BY-SA demo images (see `CREDITS.md` there) to be replaced with Jamie's own before launch. Keep this structure so a Git-based CMS can be added later.
 - Site-wide facts (name, email, social links, nav) live in `src/data/site.ts`; colours, type and spacing live in `src/styles/tokens.css`. Change those, not individual components.
 - "Update the site" prompts should be: branch, edit content, push, share the Vercel preview URL. Never push straight to `main`.
 

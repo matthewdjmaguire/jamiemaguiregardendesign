@@ -18,7 +18,6 @@ npm run dev        # http://localhost:4321
 | `npm run build` | Builds the site into `dist/` |
 | `npm test` | Tests for the contact-form validation and handler |
 | `npm run check:contrast` | Checks the colour palette meets WCAG AA contrast |
-| `npm run placeholders` | Regenerates the placeholder images (delete once real photos are in) |
 
 `npm run dev` serves the pages only. The contact form posts to `/api/contact`, which runs on Vercel (or `vercel dev`), so locally it shows the "email me directly" fallback.
 

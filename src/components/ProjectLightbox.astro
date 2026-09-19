@@ -20,8 +20,8 @@ const { projects } = Astro.props;
           )}
           {project.data.images.map((img, i) => (
             <figure data-active={i === 0 ? 'true' : 'false'}>
-              {/* Two sizes are enough: the picture is height-limited on screen, so huge variants would be wasted downloads. */}
-              <Image src={img.src} alt={img.alt} widths={[1000, 1600]} sizes="(min-width: 1000px) 60vw, 100vw" loading="lazy" />
+              {/* Two sizes are enough: the source photos are only ~1400px wide. */}
+              <Image src={img.src} alt={img.alt} widths={[1000, 1600]} sizes="100vw" loading="lazy" />
             </figure>
           ))}
           {project.data.images.length > 1 && (
