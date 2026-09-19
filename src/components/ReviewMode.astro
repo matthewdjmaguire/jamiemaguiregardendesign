@@ -1,8 +1,6 @@
 ---
-// Review mode: add ?mode=edit to any URL to get numbered pins on every element and a notes panel,
-// so a reviewer can say "(4) change to Hello" instead of describing things. Client-side only:
-// notes stay in the reviewer's browser until they press "Copy all my notes".
-// Switched on/off site-wide by `reviewMode` in src/data/site.ts (turn it OFF at launch).
+// Review mode: add ?mode=edit to any URL for numbered pins on every element and a notes panel.
+// Client-side only (notes stay in the reviewer's browser). Switched by `reviewMode` in src/data/site.ts; turn OFF at launch.
 ---
 
 <script>
@@ -25,8 +23,13 @@
   if (param === 'off') store.del(sessionStorage, MODE_KEY);
   if (store.get(sessionStorage, MODE_KEY) === 'on') void start();
 
-  type Item = { label: string; type: string; snippet: string; el: HTMLElement };
-  type Notes = Record<string, Record<string, { note: string; type: string; snippet: string }>>;
+  type Saved = { note: string; type: string; snippet: string };
+  // Each page's notes carry the page's display name, so a later rename can't relabel old notes.
+  type Notes = Record<string, { page: string; items: Record<string, Saved> }>;
+  type Item = {
+    label: string; type: string; snippet: string; el: HTMLElement;
+    pin: HTMLButtonElement; row: HTMLLIElement; area: HTMLTextAreaElement;
+  };
 
   async function start() {
     // The overlay's stylesheet (public/review.css) is added only when review mode is active, so normal pages never carry it.
@@ -37,51 +40,117 @@
       link.onload = link.onerror = () => done();
       document.head.append(link);
     });
-    const pagePath = location.pathname.replace(/\/$/, '') || '/';
-    const pageName = (path: string) =>
-      path === '/privacy' ? 'Privacy' : site.nav.find((n) => n.href === path)?.label ?? path;
-    const pageOrder = [...site.nav.map((n) => n.label), 'Privacy'];
 
-    const readNotes = (): Notes => { try { return JSON.parse(store.get(localStorage, NOTES_KEY) || '{}'); } catch { return {}; } };
-    const notes = readNotes();
-    const saveNotes = () => store.set(localStorage, NOTES_KEY, JSON.stringify(notes));
-    const noteCount = () => Object.values(notes).reduce((n, p) => n + Object.keys(p).length, 0);
-
-    // ---- 1. Find and number everything, in reading order (header "H", footer "F", page content plain) ----
     const norm = (s: string | null | undefined) => (s ?? '').replace(/\s+/g, ' ').trim();
+    const short = (s: string) => (s.length > 60 ? s.slice(0, 57) + '…' : s);
+    // Text nodes joined with spaces, so "Jamie Maguire" + "Garden Design" don't run together.
     const textOf = (root: Element) => {
       const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
       const parts: string[] = [];
       while (w.nextNode()) parts.push(w.currentNode.nodeValue ?? '');
       return norm(parts.join(' '));
     };
-    const short = (s: string) => (s.length > 60 ? s.slice(0, 57) + '…' : s);
-
-    const skip = (el: HTMLElement): boolean => {
-      if (el.closest('[data-review-ui], .skip-link, dialog, .hp, noscript')) return true;
-      const tag = el.tagName;
-      if (el.closest('.hero__media') && !el.classList.contains('hero__media')) return true;
-      // Containers whose children are numbered individually.
-      if (tag === 'LI' && el.querySelector('a, button, h1, h2, h3, p')) return true;
-      // Inline links/buttons inside a text block are covered by that text block's number.
-      if ((tag === 'A' || tag === 'BUTTON') && norm(el.closest('p, h1, h2, h3, label')?.textContent)) return true;
-      if (tag === 'IMG' && el.closest('a, button')) return true; // the link/tile carries the number
-      const isMedia = tag === 'IMG' || tag === 'INPUT' || tag === 'TEXTAREA' || el.classList.contains('hero__media');
-      return !isMedia && !norm(el.textContent) && !el.querySelector('img');
+    const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', text = '') => {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text) e.textContent = text; // textContent, never innerHTML: page text is never interpreted as HTML
+      return e;
+    };
+    const hover = (node: Element, target: Element) => {
+      node.addEventListener('mouseenter', () => target.classList.add('jmgd-highlight'));
+      node.addEventListener('mouseleave', () => target.classList.remove('jmgd-highlight'));
     };
 
-    const describe = (el: HTMLElement): { type: string; snippet: string } => {
-      const tag = el.tagName;
-      if (el.classList.contains('hero__media')) return { type: 'Hero image', snippet: 'Background photo at the top of the page' };
-      if (tag === 'IMG') return { type: 'Image', snippet: short(norm((el as HTMLImageElement).alt) || 'image') };
-      if (tag === 'INPUT' || tag === 'TEXTAREA') {
-        const label = norm(document.querySelector(`label[for="${el.id}"]`)?.textContent);
-        return { type: 'Form field', snippet: short(label || el.getAttribute('name') || 'field') };
+    // ---- Notes storage ----
+    const pagePath = location.pathname.replace(/\/$/, '') || '/';
+    const pageName = site.nav.find((n) => n.href === pagePath)?.label ?? (norm(document.title.split('|')[0]) || pagePath);
+    const notes: Notes = (() => {
+      try {
+        const parsed = JSON.parse(store.get(localStorage, NOTES_KEY) || '{}');
+        return Object.fromEntries(Object.entries(parsed).filter(([, v]) => (v as { items?: unknown })?.items)) as Notes;
+      } catch { return {}; }
+    })();
+    const saveNotes = () => store.set(localStorage, NOTES_KEY, JSON.stringify(notes));
+    const noteCount = () => Object.values(notes).reduce((n, p) => n + Object.keys(p.items).length, 0);
+
+    // ---- Panel shell ----
+    const layer = el('div', 'jmgd-layer');
+    const toggle = el('button', 'jmgd-toggle');
+    const panel = el('aside', 'jmgd-panel');
+    for (const node of [layer, toggle, panel]) node.setAttribute('data-review-ui', '');
+    toggle.type = 'button';
+    panel.setAttribute('aria-label', 'Review mode notes');
+
+    const head = el('header');
+    const status = el('p', 'jmgd-status');
+    status.setAttribute('role', 'status');
+    const copyBtn = el('button', 'jmgd-btn', 'Copy all my notes');
+    const exitBtn = el('button', 'jmgd-btn jmgd-btn--ghost', 'Exit review mode');
+    copyBtn.type = exitBtn.type = 'button';
+    const actions = el('div', 'jmgd-actions');
+    actions.append(copyBtn, exitBtn);
+    head.append(
+      el('h2', '', 'Review mode'),
+      el('p', '', `Page: ${pageName}. Click a number on the page (or a row here), then write what should change. Numbers only match the version you are looking at.`),
+      actions,
+      status,
+    );
+    const list = el('ol', 'jmgd-list');
+    const foot = el('footer');
+    const count = el('span');
+    const clearBtn = el('button', 'jmgd-btn jmgd-btn--ghost', 'Clear all notes');
+    clearBtn.type = 'button';
+    foot.append(count, clearBtn);
+    panel.append(head, list, foot);
+
+    let open = false;
+    const refreshCount = () => {
+      const n = noteCount();
+      count.textContent = `${n} note${n === 1 ? '' : 's'} saved (all pages)`;
+      toggle.textContent = open ? 'Hide review panel' : `Review mode · ${n} note${n === 1 ? '' : 's'}`;
+    };
+    const setOpen = (v: boolean) => { open = v; panel.setAttribute('data-open', String(v)); refreshCount(); };
+
+    let active: Item | undefined;
+    function openPanel(item: Item) {
+      setOpen(true);
+      for (const it of [active, item]) {
+        if (!it) continue;
+        const on = String(it === item);
+        it.row.setAttribute('data-active', on);
+        it.pin.setAttribute('data-active', on);
       }
-      const text = short(textOf(el) || norm(el.querySelector('img')?.getAttribute('alt')) || norm(el.getAttribute('aria-label')));
+      active = item;
+      item.row.scrollIntoView({ block: 'center' });
+      item.area.focus();
+    }
+
+    // ---- Find and number everything, in reading order (header "H", footer "F", page content plain) ----
+    const skip = (e: HTMLElement): boolean => {
+      const tag = e.tagName;
+      if (e.closest('[data-review-ui], .skip-link, dialog, .hp, noscript')) return true;
+      if (e.closest('.hero__media') && !e.classList.contains('hero__media')) return true;
+      // Containers whose children are numbered individually.
+      if (tag === 'LI' && e.querySelector('a, button, h1, h2, h3, p')) return true;
+      // Inline links/buttons inside a text block are covered by that text block's number.
+      if ((tag === 'A' || tag === 'BUTTON') && norm(e.closest('p, h1, h2, h3, label')?.textContent)) return true;
+      if (tag === 'IMG' && e.closest('a, button')) return true; // the link/tile carries the number
+      const isMedia = tag === 'IMG' || tag === 'INPUT' || tag === 'TEXTAREA' || e.classList.contains('hero__media');
+      return !isMedia && !norm(e.textContent) && !e.querySelector('img');
+    };
+
+    const describe = (e: HTMLElement): { type: string; snippet: string } => {
+      const tag = e.tagName;
+      if (e.classList.contains('hero__media')) return { type: 'Hero image', snippet: 'Background photo at the top of the page' };
+      if (tag === 'IMG') return { type: 'Image', snippet: short(norm((e as HTMLImageElement).alt) || 'image') };
+      if (tag === 'INPUT' || tag === 'TEXTAREA') {
+        const label = norm(document.querySelector(`label[for="${e.id}"]`)?.textContent);
+        return { type: 'Form field', snippet: short(label || e.getAttribute('name') || 'field') };
+      }
+      const text = short(textOf(e) || norm(e.querySelector('img')?.getAttribute('alt')) || norm(e.getAttribute('aria-label')));
       if (/^H[1-3]$/.test(tag)) return { type: 'Heading', snippet: text };
-      if (el.classList.contains('tile')) return { type: 'Project tile', snippet: text };
-      if (tag === 'BUTTON' || el.classList.contains('btn')) return { type: 'Button', snippet: text };
+      if (e.classList.contains('tile')) return { type: 'Project tile', snippet: text };
+      if (tag === 'BUTTON' || e.classList.contains('btn')) return { type: 'Button', snippet: text };
       if (tag === 'A') return { type: 'Link', snippet: text };
       if (tag === 'LABEL') return { type: 'Form label', snippet: text };
       return { type: 'Text', snippet: text };
@@ -89,43 +158,70 @@
 
     const counters: Record<string, number> = { '': 0, H: 0, F: 0 };
     const items: Item[] = [];
-    document.querySelectorAll<HTMLElement>('h1, h2, h3, p, li, label, a, button, img, input, textarea, .hero__media').forEach((el) => {
-      if (skip(el)) return;
-      const zone = el.closest('.site-header') ? 'H' : el.closest('.site-footer') ? 'F' : '';
-      items.push({ label: `${zone}${++counters[zone]}`, el, ...describe(el) });
-    });
+    document.querySelectorAll<HTMLElement>('h1, h2, h3, p, li, label, a, button, img, input, textarea, .hero__media').forEach((target) => {
+      if (skip(target)) return;
+      const zone = target.closest('.site-header') ? 'H' : target.closest('.site-footer') ? 'F' : '';
+      const label = `${zone}${++counters[zone]}`;
+      const { type, snippet } = describe(target);
 
-    // ---- 2. Pins (drawn over the page, never changing its layout) ----
-    const layer = document.createElement('div');
-    layer.className = 'jmgd-layer';
-    layer.setAttribute('data-review-ui', '');
-    const pins = new Map<Item, HTMLButtonElement>();
-    for (const item of items) {
-      const pin = document.createElement('button');
+      // The numbered pin drawn over the page...
+      const pin = el('button', 'jmgd-pin', label);
       pin.type = 'button';
-      pin.className = 'jmgd-pin';
-      pin.textContent = item.label;
-      pin.setAttribute('aria-label', `Item ${item.label}: ${item.type}, ${item.snippet}`);
-      pin.addEventListener('click', () => openPanel(item));
-      pin.addEventListener('mouseenter', () => item.el.classList.add('jmgd-highlight'));
-      pin.addEventListener('mouseleave', () => item.el.classList.remove('jmgd-highlight'));
-      pins.set(item, pin);
+      pin.setAttribute('aria-label', `Item ${label}: ${type}, ${snippet}`);
+      hover(pin, target);
       layer.append(pin);
-    }
-    document.body.append(layer);
 
-    // Positions are recomputed when the page changes size (fonts loading, images, window resizing).
-    // Items that are currently hidden (e.g. the mobile menu) keep their number but get no pin.
+      // ...and its row in the notes panel.
+      const row = el('li', 'jmgd-row');
+      const rowHead = el('div', 'jmgd-row__head');
+      rowHead.append(el('span', 'jmgd-num', label), el('span', 'jmgd-type', type), el('span', 'jmgd-snippet', snippet));
+      const area = el('textarea');
+      area.placeholder = 'What should change?';
+      area.setAttribute('aria-label', `Note for item ${label}: ${snippet}`);
+      row.append(rowHead, area);
+      hover(row, target);
+
+      // A saved note is matched by number, so if the text at that number has since changed, say so.
+      const saved = notes[pagePath]?.items[label];
+      let stale: HTMLElement | undefined;
+      if (saved) {
+        area.value = saved.note;
+        if (saved.snippet !== snippet) {
+          stale = el('p', 'jmgd-stale', `The text here has changed since you wrote this note. It used to be “${saved.snippet}”.`);
+          row.append(stale);
+        }
+      }
+      area.addEventListener('input', () => {
+        stale?.remove();
+        const page = (notes[pagePath] ??= { page: pageName, items: {} });
+        if (area.value.trim()) page.items[label] = { note: area.value, type, snippet };
+        else delete page.items[label];
+        saveNotes();
+        refreshCount();
+      });
+
+      const item: Item = { label, type, snippet, el: target, pin, row, area };
+      pin.addEventListener('click', () => openPanel(item));
+      list.append(row);
+      items.push(item);
+    });
+    document.body.append(layer, panel, toggle);
+
+    // Pins are placed over their elements and re-placed when the page changes size. Items currently hidden
+    // (e.g. the mobile menu) keep their number but get no pin. All reads happen before any writes, so the
+    // browser lays the page out once per pass instead of once per pin.
     const place = () => {
-      layer.style.height = document.documentElement.scrollHeight + 'px';
-      for (const [item, pin] of pins) {
-        const r = item.el.getBoundingClientRect();
-        const visible = r.width > 0 && r.height > 0 && getComputedStyle(item.el).visibility !== 'hidden';
+      const height = document.documentElement.scrollHeight;
+      const rects = items.map((i) => i.el.getBoundingClientRect());
+      layer.style.height = height + 'px';
+      items.forEach(({ pin }, i) => {
+        const r = rects[i];
+        const visible = r.width > 0 && r.height > 0;
         pin.style.display = visible ? '' : 'none';
-        if (!visible) continue;
+        if (!visible) return;
         pin.style.left = Math.max(2, r.left + scrollX - 10) + 'px';
         pin.style.top = Math.max(2, r.top + scrollY - 10) + 'px';
-      }
+      });
     };
     let queued = false;
     const schedule = () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; place(); }); } };
@@ -134,82 +230,8 @@
     document.querySelector('.nav-toggle')?.addEventListener('click', () => setTimeout(schedule, 60));
     place();
 
-    // ---- 3. Panel with a note box per item ----
-    const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', text = '') => {
-      const e = document.createElement(tag);
-      if (cls) e.className = cls;
-      if (text) e.textContent = text; // textContent, never innerHTML: page text is never interpreted as HTML
-      return e;
-    };
-    const toggle = el('button', 'jmgd-toggle');
-    toggle.type = 'button';
-    toggle.setAttribute('data-review-ui', '');
-    const panel = el('aside', 'jmgd-panel');
-    panel.setAttribute('data-review-ui', '');
-    panel.setAttribute('aria-label', 'Review mode notes');
-
-    const head = el('header');
-    head.append(el('h2', '', 'Review mode'));
-    const intro = el('p', '', `Page: ${pageName(pagePath)}. Click a number on the page (or a row here), then write what should change. Numbers only match the version you are looking at.`);
-    const status = el('p', 'jmgd-status');
-    status.setAttribute('role', 'status');
-    const actions = el('div', 'jmgd-actions');
-    const copyBtn = el('button', 'jmgd-btn', 'Copy all my notes');
-    const exitBtn = el('button', 'jmgd-btn jmgd-btn--ghost', 'Exit review mode');
-    copyBtn.type = exitBtn.type = 'button';
-    actions.append(copyBtn, exitBtn);
-    head.append(intro, actions, status);
-
-    const list = el('ol', 'jmgd-list');
-    const rows = new Map<Item, { row: HTMLElement; area: HTMLTextAreaElement }>();
-    for (const item of items) {
-      const row = el('li', 'jmgd-row');
-      const rowHead = el('div', 'jmgd-row__head');
-      rowHead.append(el('span', 'jmgd-num', item.label), el('span', 'jmgd-type', item.type), el('span', 'jmgd-snippet', item.snippet));
-      const area = el('textarea');
-      area.placeholder = 'What should change?';
-      area.setAttribute('aria-label', `Note for item ${item.label}: ${item.snippet}`);
-      area.value = notes[pagePath]?.[item.label]?.note ?? '';
-      area.addEventListener('input', () => {
-        const value = area.value.trim();
-        if (value) (notes[pagePath] ??= {})[item.label] = { note: area.value, type: item.type, snippet: item.snippet };
-        else if (notes[pagePath]) delete notes[pagePath][item.label];
-        saveNotes();
-        refreshCount();
-      });
-      row.addEventListener('mouseenter', () => item.el.classList.add('jmgd-highlight'));
-      row.addEventListener('mouseleave', () => item.el.classList.remove('jmgd-highlight'));
-      row.append(rowHead, area);
-      rows.set(item, { row, area });
-      list.append(row);
-    }
-
-    const foot = el('footer');
-    const count = el('span');
-    const clearBtn = el('button', 'jmgd-btn jmgd-btn--ghost', 'Clear all notes');
-    clearBtn.type = 'button';
-    foot.append(count, clearBtn);
-    panel.append(head, list, foot);
-    document.body.append(panel, toggle);
-
-    const refreshCount = () => {
-      const n = noteCount();
-      count.textContent = `${n} note${n === 1 ? '' : 's'} saved (all pages)`;
-      toggle.textContent = panel.getAttribute('data-open') === 'true' ? 'Hide review panel' : `Review mode · ${n} note${n === 1 ? '' : 's'}`;
-    };
-    const setOpen = (open: boolean) => { panel.setAttribute('data-open', String(open)); refreshCount(); };
-    function openPanel(item?: Item) {
-      setOpen(true);
-      for (const [it, r] of rows) r.row.setAttribute('data-active', String(it === item));
-      for (const [it, pin] of pins) pin.setAttribute('data-active', String(it === item));
-      if (item) {
-        const r = rows.get(item)!;
-        r.row.scrollIntoView({ block: 'center' });
-        r.area.focus();
-      }
-    }
-    toggle.addEventListener('click', () => setOpen(panel.getAttribute('data-open') !== 'true'));
-
+    // ---- Buttons ----
+    toggle.addEventListener('click', () => setOpen(!open));
     exitBtn.addEventListener('click', () => {
       store.del(sessionStorage, MODE_KEY);
       const url = new URL(location.href);
@@ -220,26 +242,25 @@
       if (!noteCount() || !confirm('Delete all the notes you have written, on every page?')) return;
       for (const k of Object.keys(notes)) delete notes[k];
       saveNotes();
-      rows.forEach((r) => (r.area.value = ''));
+      items.forEach((i) => (i.area.value = ''));
+      list.querySelectorAll('.jmgd-stale').forEach((n) => n.remove());
       refreshCount();
       status.textContent = 'All notes cleared.';
     });
 
     // Copies every page's notes as one message. If the browser blocks clipboard access, shows a box to copy from.
     copyBtn.addEventListener('click', async () => {
-      const entries = Object.entries(notes).flatMap(([path, byLabel]) =>
-        Object.entries(byLabel).map(([label, v]) => ({ page: pageName(path), label, ...v })),
-      );
+      const entries = Object.values(notes).flatMap((p) => Object.entries(p.items).map(([label, v]) => ({ page: p.page, label, ...v })));
       const message = formatNotes(entries, {
         title: site.business,
         url: location.origin,
         date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
-        pageOrder,
+        pageOrder: site.nav.map((n) => n.label),
       });
       if (!message) { status.textContent = 'No notes yet. Click a number and write something first.'; return; }
       try {
         await navigator.clipboard.writeText(message);
-        status.textContent = `Copied ${entries.filter((e) => e.note.trim()).length} notes. Paste them into your message.`;
+        status.textContent = `Copied ${entries.length} note${entries.length === 1 ? '' : 's'}. Paste them into your message.`;
       } catch {
         status.textContent = 'Could not copy automatically. Select all the text below and copy it.';
         const box = el('textarea', 'jmgd-manual');
@@ -250,7 +271,6 @@
       }
     });
 
-    refreshCount();
     setOpen(false);
   }
 </script>
