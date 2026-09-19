@@ -47,6 +47,15 @@ images:                       # first image is the cover
 ---
 ```
 
+## Review mode (for design feedback)
+
+Add `?mode=edit` to any page address (for example `/about?mode=edit`) to see a numbered pin on every heading, paragraph, button, link, image and form field. Click a pin to write a note against it. The panel's **Copy all my notes** button copies every page's notes as one message to paste back, like `(3) Heading: "Thoughtful, elegant gardens…" → Change to Hello`.
+
+- Numbers count down each page in reading order. The header and footer use `H` and `F` (H2, F1), so they mean the same on every page.
+- It stays on while browsing that tab; `?mode=off` or the **Exit review mode** button turns it off. Notes are saved in the reviewer's own browser only.
+- Numbers only match the version being viewed, and shift when elements are added or removed.
+- **Turn it off at launch:** set `reviewMode: false` in `src/data/site.ts`. Nothing review-related is then loaded on any page.
+
 ## Environment variables
 
 Set in Vercel (Project Settings > Environment Variables). Never commit them.

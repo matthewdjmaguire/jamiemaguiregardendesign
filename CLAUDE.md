@@ -30,7 +30,8 @@ Ask before adding any (Resend SDK, CMS, analytics) and say what it replaces.
 
 ## Conventions
 - **No secrets in the repo.** Platform env vars only (Vercel project settings). The only secret is `RESEND_API_KEY`.
-- Plain CSS with design tokens, minimal JavaScript (mobile menu, project lightbox, contact form). Accessibility target: WCAG AA; check contrast with `npm run check:contrast` when tokens change.
+- Plain CSS with design tokens, minimal JavaScript (mobile menu, project lightbox, contact form, review mode).
+- **Review mode** (`?mode=edit`, see README) is a temporary aid: `reviewMode` in `src/data/site.ts` must be `false` at launch. Accessibility target: WCAG AA; check contrast with `npm run check:contrast` when tokens change.
 - Keep a `README` that says how to run it and what the env vars are.
 
 ## Explain as you go

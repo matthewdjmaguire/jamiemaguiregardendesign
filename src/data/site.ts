@@ -5,8 +5,12 @@
 //   'overlay' hero image runs to the very top of the page with white links on top of it (default)
 export type HeaderStyle = 'solid' | 'overlay';
 
+// reviewMode: true lets a reviewer add ?mode=edit to any URL to see numbered pins on every element
+// and write notes against them. TURN THIS OFF AT LAUNCH (public visitors shouldn't get it).
+
 export const site = {
   headerStyle: 'overlay' as HeaderStyle,
+  reviewMode: true,
   name: 'Jamie Maguire',
   business: 'Jamie Maguire Garden Design',
   url: 'https://jamiemaguiregardendesign.com',
