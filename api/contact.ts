@@ -1,7 +1,7 @@
 // Vercel Function: receives the contact form and emails Jamie through Resend's REST API.
 // Enquiries are forwarded, never stored. Needs env vars (set in Vercel, never committed):
 //   RESEND_API_KEY  required
-//   CONTACT_TO      optional, defaults to Jamie's address
+//   CONTACT_TO      required, where enquiries are delivered
 //   CONTACT_FROM    optional, must be on a domain verified in Resend
 import { validateEnquiry, singleLine } from '../src/lib/contact-validation.js';
 
@@ -31,9 +31,9 @@ export async function POST(request: Request): Promise<Response> {
   const { name, email, message } = result.value;
 
   const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) return json({ error: 'The contact form is not switched on yet.' }, 503);
+  const to = process.env.CONTACT_TO;
+  if (!apiKey || !to) return json({ error: 'The contact form is not switched on yet.' }, 503);
 
-  const to = process.env.CONTACT_TO || 'jamiemaguiregardendesign@gmail.com';
   const from = process.env.CONTACT_FROM || 'Website enquiry <enquiries@jamiemaguiregardendesign.com>';
 
   const response = await fetch('https://api.resend.com/emails', {

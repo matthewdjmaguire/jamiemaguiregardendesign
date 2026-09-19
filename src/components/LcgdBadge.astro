@@ -1,0 +1,20 @@
+---
+// The London College of Garden Design graduate logo, linked to Jamie's LCGD portfolio (the college asks graduates for this reciprocal link).
+import { site } from '../data/site';
+import logo from '../assets/lcgd/lcgd-garden-design-diploma.svg';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<a
+  class={className}
+  href={site.lcgdPortfolioUrl}
+  rel="noopener"
+  aria-label="Jamie's graduate portfolio at the London College of Garden Design (opens the LCGD website)"
+>
+  <img class="lcgd-badge" src={logo.src} width={logo.width} height={logo.height} alt="London College of Garden Design, Garden Design Diploma graduate" />
+</a>

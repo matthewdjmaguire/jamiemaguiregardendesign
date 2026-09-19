@@ -158,17 +158,17 @@ a:hover { color: var(--olive-900); }
 /* Forms: visible labels, strong borders, clear errors */
 .form { display: grid; gap: var(--space-3); max-width: 36rem; }
 .field label { display: block; font-weight: 500; margin-bottom: 0.4rem; }
-.field .hint { font-weight: 400; color: var(--muted); font-size: var(--text-sm); }
+.hint { font-weight: 400; color: var(--muted); font-size: var(--text-sm); }
 .field input, .field textarea {
   width: 100%; padding: 0.85rem 1rem; font: inherit; color: var(--ink); background: var(--white);
   border: 2px solid var(--olive-900); border-radius: var(--radius);
 }
 .field textarea { min-height: 10rem; resize: vertical; }
 .field input:focus-visible, .field textarea:focus-visible { outline: 3px solid var(--sage-500); outline-offset: 2px; }
-.field [aria-invalid='true'] { border-color: #8a1c1c; background: #fdf3f3; }
-.field .error { color: #8a1c1c; font-weight: 500; margin: 0.4rem 0 0; font-size: var(--text-sm); }
+.field [aria-invalid='true'] { border-color: var(--error); background: var(--error-bg); }
+.field .error { color: var(--error); font-weight: 500; margin: 0.4rem 0 0; font-size: var(--text-sm); }
 .form-status { padding: var(--space-2); border-left: 4px solid var(--olive-700); background: var(--sage-100); }
-.form-status[data-state='error'] { border-color: #8a1c1c; background: #fdf3f3; color: #5c1010; }
+.form-status[data-state='error'] { border-color: var(--error); background: var(--error-bg); color: var(--error-ink); }
 .form-status:empty { display: none; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; } /* honeypot: hidden from people, visible to bots */
 
@@ -181,7 +181,11 @@ a:hover { color: var(--olive-900); }
 .site-footer ul { list-style: none; margin: 0; padding: 0; }
 .site-footer li { margin-bottom: 0.4rem; }
 .footer-logo { background: var(--white); padding: var(--space-2); display: inline-block; }
-.footer-logo img { height: 7.5rem; width: auto; }
+.lcgd-badge { height: 8.5rem; width: auto; }
+.footer-logo .lcgd-badge { height: 7.5rem; }
+.panel__logo { margin-top: var(--space-3); }
+.container--narrow { max-width: 46rem; }
+.lead--narrow { max-width: 40rem; margin-bottom: var(--space-4); }
 .footer-legal { margin-top: var(--space-4); padding-top: var(--space-2); border-top: 1px solid rgb(255 255 255 / 0.25); font-size: var(--text-sm); }
 
 /* Respect people who ask for less motion. */

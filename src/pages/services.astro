@@ -4,21 +4,6 @@ import PageHero from '../components/PageHero.astro';
 import EnquiryBlock from '../components/EnquiryBlock.astro';
 import heroImage from '../assets/placeholders/about.svg';
 
-// Longer descriptions sit here (with the summaries in site.ts). Draft copy: Jamie to confirm what each service includes.
-const details: Record<string, { body: string; points: string[] }> = {
-  consultation: {
-    body: 'A good place to start if you are unsure where to begin, or want a fresh pair of eyes before committing to a full design.',
-    points: ['A visit to your garden to look at the space, light and soil', 'A conversation about how you want to use it', 'Practical advice on layout, planting and materials'],
-  },
-  'planting-design': {
-    body: 'Planting brings a garden to life. I design schemes that look good across the seasons, suit your conditions and support pollinators and wildlife.',
-    points: ['Plant selection matched to your soil and aspect', 'Layered, seasonal interest with a clear structure', 'A planting plan you or your contractor can follow'],
-  },
-  'full-garden-design': {
-    body: 'For a whole garden, a complete design that brings layout, materials and planting together into one considered scheme.',
-    points: ['A concept design to explore ideas with you', 'Detailed plans for construction and planting', 'Guidance as the garden is built'],
-  },
-};
 import { site } from '../data/site';
 
 const steps = [
@@ -44,8 +29,8 @@ const steps = [
           <div class="service-detail" id={s.id}>
             <h3>{s.title}</h3>
             <div>
-              <p>{details[s.id].body}</p>
-              <ul>{details[s.id].points.map((p) => <li>{p}</li>)}</ul>
+              <p>{s.body}</p>
+              <ul>{s.points.map((p) => <li>{p}</li>)}</ul>
             </div>
           </div>
         ))

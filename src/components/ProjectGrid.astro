@@ -4,11 +4,11 @@ import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   projects: CollectionEntry<'projects'>[];
-  // 'lightbox': clicking enlarges the images in place. 'link': tiles simply go to the Projects page.
-  mode?: 'lightbox' | 'link';
+  // true: tiles are buttons that open <ProjectLightbox> (render that too). false: tiles link to /projects.
+  lightbox?: boolean;
 }
 
-const { projects, mode = 'lightbox' } = Astro.props;
+const { projects, lightbox = false } = Astro.props;
 ---
 
 <div class="grid">
@@ -24,73 +24,13 @@ const { projects, mode = 'lightbox' } = Astro.props;
           </span>
         </>
       );
-      return mode === 'link' ? (
-        <a class="tile" href="/projects">{inner}</a>
-      ) : (
+      return lightbox ? (
         <button class="tile" type="button" data-lightbox-open={project.id} aria-haspopup="dialog">
           {inner}
         </button>
+      ) : (
+        <a class="tile" href="/projects">{inner}</a>
       );
     })
   }
 </div>
-
-{
-  mode === 'lightbox' &&
-    projects.map((project) => (
-      <dialog class="lightbox" id={`lightbox-${project.id}`} aria-label={`${project.data.title}, ${project.data.location}`}>
-        <div class="lightbox__inner">
-          <div class="lightbox__stage">
-            <button class="lb-btn lb-close" type="button" data-lightbox-close aria-label="Close">&times;</button>
-            {project.data.images.length > 1 && (
-              <button class="lb-btn lb-prev" type="button" data-lightbox-prev aria-label="Previous image">&#8249;</button>
-            )}
-            {project.data.images.map((img, i) => (
-              <figure data-active={i === 0 ? 'true' : 'false'}>
-                <Image src={img.src} alt={img.alt} widths={[900, 1400, 2000]} sizes="100vw" loading="lazy" />
-              </figure>
-            ))}
-            {project.data.images.length > 1 && (
-              <button class="lb-btn lb-next" type="button" data-lightbox-next aria-label="Next image">&#8250;</button>
-            )}
-          </div>
-          <div class="lightbox__meta">
-            <h2>{project.data.title}</h2>
-            <p>{project.data.location} &middot; {project.data.summary}</p>
-          </div>
-        </div>
-      </dialog>
-    ))
-}
-
-<script>
-  // Lightbox behaviour. Uses the native <dialog> so Esc, focus trapping and screen-reader
-  // semantics come from the browser. This script only handles opening, closing and paging.
-  document.querySelectorAll<HTMLButtonElement>('[data-lightbox-open]').forEach((tile) => {
-    const dialog = document.getElementById(`lightbox-${tile.dataset.lightboxOpen}`) as HTMLDialogElement | null;
-    if (!dialog) return;
-    const figures = Array.from(dialog.querySelectorAll<HTMLElement>('figure'));
-    let index = 0;
-
-    const show = (i: number) => {
-      index = (i + figures.length) % figures.length;
-      figures.forEach((f, n) => f.setAttribute('data-active', String(n === index)));
-    };
-
-    tile.addEventListener('click', () => {
-      show(0);
-      dialog.showModal();
-    });
-    dialog.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dialog.close());
-    dialog.querySelector('[data-lightbox-prev]')?.addEventListener('click', () => show(index - 1));
-    dialog.querySelector('[data-lightbox-next]')?.addEventListener('click', () => show(index + 1));
-    // Clicking the dark backdrop (the dialog element itself) closes it.
-    dialog.addEventListener('click', (e) => {
-      if (e.target === dialog || (e.target as HTMLElement).classList.contains('lightbox__inner')) dialog.close();
-    });
-    dialog.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') show(index - 1);
-      if (e.key === 'ArrowRight') show(index + 1);
-    });
-  });
-</script>

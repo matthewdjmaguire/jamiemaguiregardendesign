@@ -10,7 +10,7 @@ const lum = (hex) => {
     .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 };
-export const ratio = (a, b) => {
+const ratio = (a, b) => {
   const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
   return (hi + 0.05) / (lo + 0.05);
 };
@@ -28,6 +28,9 @@ const pairs = [
   ['olive-700', 'paper', 4.5, 'links on off-white'],
   ['white', 'olive-700', 4.5, 'filled button text'],
   ['white', 'olive-900', 4.5, 'button hover / dark footer text'],
+  ['error', 'white', 4.5, 'form error text'],
+  ['error', 'error-bg', 4.5, 'form error text on its wash'],
+  ['error-ink', 'error-bg', 4.5, 'form status text'],
   ['olive-900', 'white', 3, 'form field borders (UI component)'],
 ];
 

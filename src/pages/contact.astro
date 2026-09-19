@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import { site } from '../data/site';
+import { LIMITS } from '../lib/contact-validation.js';
 import heroImage from '../assets/placeholders/about.svg';
 ---
 
@@ -14,15 +15,15 @@ import heroImage from '../assets/placeholders/about.svg';
         <form class="form" id="contact-form" method="post" action="/api/contact" novalidate>
           <div class="field">
             <label for="name">Your name</label>
-            <input id="name" name="name" type="text" autocomplete="name" required maxlength="100" />
+            <input id="name" name="name" type="text" autocomplete="name" required maxlength={LIMITS.name} />
           </div>
           <div class="field">
             <label for="email">Your email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required maxlength="254" />
+            <input id="email" name="email" type="email" autocomplete="email" required maxlength={LIMITS.email} />
           </div>
           <div class="field">
             <label for="message">About your garden <span class="hint">(location, size, what you would like)</span></label>
-            <textarea id="message" name="message" required maxlength="5000"></textarea>
+            <textarea id="message" name="message" required maxlength={LIMITS.message}></textarea>
           </div>
           <div class="hp" aria-hidden="true">
             <label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
@@ -46,10 +47,12 @@ import heroImage from '../assets/placeholders/about.svg';
 
 <script>
   import { validateEnquiry } from '../lib/contact-validation.js';
+  import { site } from '../data/site';
 
   const form = document.getElementById('contact-form') as HTMLFormElement;
   const status = document.getElementById('form-status') as HTMLElement;
-  const fallback = 'Sorry, something went wrong. Please email me directly at jamiemaguiregardendesign@gmail.com.';
+  const emailHint = `You can also email ${site.email}.`;
+  const fallback = `Sorry, something went wrong. ${emailHint}`;
 
   const clearErrors = () => {
     form.querySelectorAll('.error').forEach((el) => el.remove());
@@ -100,7 +103,7 @@ import heroImage from '../assets/placeholders/about.svg';
         showErrors(body.errors);
       } else {
         status.setAttribute('data-state', 'error');
-        status.textContent = body.error ? `${body.error} You can also email jamiemaguiregardendesign@gmail.com.` : fallback;
+        status.textContent = body.error ? `${body.error} ${emailHint}` : fallback;
       }
     } catch {
       status.setAttribute('data-state', 'error');

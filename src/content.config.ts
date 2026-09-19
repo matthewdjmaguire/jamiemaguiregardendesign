@@ -10,7 +10,6 @@ const projects = defineCollection({
     z.object({
       title: z.string(),
       location: z.string(),
-      year: z.number().optional(),
       summary: z.string(),
       order: z.number().default(100), // lower numbers appear first
       images: z.array(z.object({ src: image(), alt: z.string() })).min(1),

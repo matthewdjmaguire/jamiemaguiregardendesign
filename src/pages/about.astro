@@ -4,7 +4,7 @@ import PageHero from '../components/PageHero.astro';
 import EnquiryBlock from '../components/EnquiryBlock.astro';
 import { site } from '../data/site';
 import aboutImage from '../assets/placeholders/about.svg';
-import lcgdLogo from '../assets/lcgd/lcgd-garden-design-diploma.svg';
+import LcgdBadge from '../components/LcgdBadge.astro';
 ---
 
 <BaseLayout title="About" description="About Jamie Maguire: a garden designer trained at the London College of Garden Design, creating thoughtful, elegant and liveable gardens.">
@@ -39,11 +39,7 @@ import lcgdLogo from '../assets/lcgd/lcgd-garden-design-diploma.svg';
           <li>Previously two decades in commercial property law</li>
           <li>Working across {site.area}</li>
         </ul>
-        <p style="margin-top: var(--space-3)">
-          <a href={site.lcgdPortfolioUrl} rel="noopener" aria-label="Jamie's graduate portfolio on the London College of Garden Design website (opens the LCGD website)">
-            <img src={lcgdLogo.src} width={lcgdLogo.width} height={lcgdLogo.height} alt="London College of Garden Design, Garden Design Diploma graduate" style="height: 8.5rem; width: auto;" />
-          </a>
-        </p>
+        <p class="panel__logo"><LcgdBadge /></p>
       </aside>
     </div>
   </section>

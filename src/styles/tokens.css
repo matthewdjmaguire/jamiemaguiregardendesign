@@ -12,6 +12,9 @@
   --olive-900: #26331f;  /* hover state, borders, dark banners */
   --ink: #1e281b;        /* body text */
   --muted: #536048;      /* secondary text */
+  --error: #8a1c1c;      /* form errors */
+  --error-bg: #fdf3f3;
+  --error-ink: #5c1010;
 
   /* Type */
   --font-heading: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
@@ -30,7 +33,6 @@
   --space-4: 2rem;
   --space-5: 3rem;
   --space-6: 5rem;
-  --space-7: 7.5rem;
 
   /* Layout */
   --container: 72rem;

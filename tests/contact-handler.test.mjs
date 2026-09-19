@@ -11,6 +11,7 @@ let calls;
 beforeEach(() => {
   calls = [];
   delete process.env.RESEND_API_KEY;
+  delete process.env.CONTACT_TO;
   globalThis.fetch = async (url, init) => { calls.push({ url, init }); return new Response('{}', { status: 200 }); };
 });
 afterEach(() => { globalThis.fetch = realFetch; });
@@ -37,8 +38,15 @@ test('returns 503 when the email service is not configured', async () => {
   assert.equal(calls.length, 0);
 });
 
+test('returns 503 when no recipient is configured', async () => {
+  process.env.RESEND_API_KEY = 'test-key';
+  assert.equal((await POST(req(valid))).status, 503);
+  assert.equal(calls.length, 0);
+});
+
 test('sends plain-text email with reply_to set to the visitor', async () => {
   process.env.RESEND_API_KEY = 'test-key';
+  process.env.CONTACT_TO = 'jamie@example.com';
   const res = await POST(req({ ...valid, name: 'Sam\r\nBcc: x@y.com' }));
   assert.equal(res.status, 200);
   const sent = JSON.parse(calls[0].init.body);
@@ -51,6 +59,7 @@ test('sends plain-text email with reply_to set to the visitor', async () => {
 
 test('reports a failure if the email provider rejects the send', async () => {
   process.env.RESEND_API_KEY = 'test-key';
+  process.env.CONTACT_TO = 'jamie@example.com';
   globalThis.fetch = async () => new Response('{}', { status: 422 });
   assert.equal((await POST(req(valid))).status, 502);
 });

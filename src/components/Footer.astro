@@ -1,6 +1,6 @@
 ---
 import { site } from '../data/site';
-import lcgdLogo from '../assets/lcgd/lcgd-garden-design-diploma.svg';
+import LcgdBadge from './LcgdBadge.astro';
 
 const year = new Date().getFullYear();
 ---
@@ -26,9 +26,7 @@ const year = new Date().getFullYear();
         </ul>
       </div>
       <div>
-        <a class="footer-logo" href={site.lcgdPortfolioUrl} rel="noopener" aria-label="Jamie's graduate portfolio at the London College of Garden Design (opens the LCGD website)">
-          <img src={lcgdLogo.src} width={lcgdLogo.width} height={lcgdLogo.height} alt="London College of Garden Design, Garden Design Diploma graduate" />
-        </a>
+        <LcgdBadge class="footer-logo" />
       </div>
     </div>
     <p class="footer-legal">

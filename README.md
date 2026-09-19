@@ -40,7 +40,6 @@ Add a Markdown file to `src/content/projects/` and put its photos in `src/assets
 ---
 title: "Courtyard Garden"
 location: "London"
-year: 2026
 summary: "One or two sentences."
 order: 1                      # lower numbers appear first
 images:                       # first image is the cover
@@ -56,7 +55,7 @@ Set in Vercel (Project Settings > Environment Variables). Never commit them.
 | Variable | Required | Purpose |
 |---|---|---|
 | `RESEND_API_KEY` | Yes, for the contact form | Sends enquiry emails through Resend. Without it the form returns a friendly "not switched on yet" error. |
-| `CONTACT_TO` | No | Where enquiries go. Defaults to `jamiemaguiregardendesign@gmail.com`. |
+| `CONTACT_TO` | Yes, for the contact form | Where enquiries are delivered (Jamie's inbox). |
 | `CONTACT_FROM` | No | Sender. Must be on a domain verified in Resend (SPF/DKIM DNS records). Defaults to `Website enquiry <enquiries@jamiemaguiregardendesign.com>`. |
 
 ## Making changes
