@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import EnquiryBlock from '../components/EnquiryBlock.astro';
+import heroImage from '../assets/placeholders/hero.svg';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="Projects" description="A selection of garden design projects by Jamie Maguire.">
+  <PageHero image={heroImage} eyebrow="Projects" title="Gardens I have designed" />
+
+  <section class="section">
+    <div class="container">
+      <p class="lead" style="max-width: 40rem; margin-bottom: var(--space-4)">Select an image to see it larger.</p>
+      <ProjectGrid projects={projects} mode="lightbox" />
+    </div>
+  </section>
+
+  <EnquiryBlock />
+</BaseLayout>

@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+import heroImage from '../assets/placeholders/about.svg';
+---
+
+<BaseLayout title="Contact" description="Get in touch with Jamie Maguire Garden Design to talk about your garden.">
+  <PageHero image={heroImage} eyebrow="Contact" title="Let's talk about your garden" />
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <form class="form" id="contact-form" method="post" action="/api/contact" novalidate>
+          <div class="field">
+            <label for="name">Your name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required maxlength="100" />
+          </div>
+          <div class="field">
+            <label for="email">Your email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required maxlength="254" />
+          </div>
+          <div class="field">
+            <label for="message">About your garden <span class="hint">(location, size, what you would like)</span></label>
+            <textarea id="message" name="message" required maxlength="5000"></textarea>
+          </div>
+          <div class="hp" aria-hidden="true">
+            <label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+          </div>
+          <p class="hint">I will only use your details to reply to your enquiry. See the <a href="/privacy">privacy notice</a>.</p>
+          <div>
+            <button class="btn" type="submit">Send enquiry</button>
+          </div>
+          <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+      <aside class="panel">
+        <h2>Prefer email?</h2>
+        <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+        <p>Instagram: <a href={site.instagram.url} rel="noopener">{site.instagram.handle}</a></p>
+        <p>Working across {site.area}.</p>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { validateEnquiry } from '../lib/contact-validation.js';
+
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const status = document.getElementById('form-status') as HTMLElement;
+  const fallback = 'Sorry, something went wrong. Please email me directly at jamiemaguiregardendesign@gmail.com.';
+
+  const clearErrors = () => {
+    form.querySelectorAll('.error').forEach((el) => el.remove());
+    form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+  };
+
+  // Shows an error under each field and links it to the input for screen readers.
+  const showErrors = (errors: Record<string, string>) => {
+    Object.entries(errors).forEach(([field, message]) => {
+      const input = form.elements.namedItem(field) as HTMLInputElement | null;
+      if (!input) return;
+      const p = document.createElement('p');
+      p.className = 'error';
+      p.id = `${field}-error`;
+      p.textContent = message;
+      input.setAttribute('aria-invalid', 'true');
+      input.setAttribute('aria-describedby', p.id);
+      input.closest('.field')?.append(p);
+    });
+    (form.querySelector('[aria-invalid="true"]') as HTMLElement | null)?.focus();
+  };
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    clearErrors();
+    status.textContent = '';
+    status.removeAttribute('data-state');
+
+    const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
+    const check = validateEnquiry(data);
+    if (!check.ok) return showErrors(check.errors);
+
+    const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    button.disabled = true;
+    status.textContent = 'Sending…';
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const body = await response.json().catch(() => ({}));
+      if (response.ok) {
+        form.reset();
+        status.textContent = 'Thank you. Your message has been sent and I will reply soon.';
+      } else if (body.errors) {
+        status.textContent = '';
+        showErrors(body.errors);
+      } else {
+        status.setAttribute('data-state', 'error');
+        status.textContent = body.error ? `${body.error} You can also email jamiemaguiregardendesign@gmail.com.` : fallback;
+      }
+    } catch {
+      status.setAttribute('data-state', 'error');
+      status.textContent = fallback;
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>
