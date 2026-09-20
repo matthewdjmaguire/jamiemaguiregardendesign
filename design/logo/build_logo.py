@@ -297,6 +297,19 @@ def svg_to_png(svg: Path, out: Path, width: int):
     page.get_pixmap(matrix=pymupdf.Matrix(zoom, zoom), alpha=True).save(out)
 
 
+def social_preview(out: Path, background: str = OLIVE_700):
+    """The 1200 x 630 image shown when the site's link is shared (WhatsApp, iMessage, Facebook, LinkedIn...):
+    the white logo on a brand-colour background. Uses the reversed lockup PNG, so run after it is rendered."""
+    from PIL import Image
+
+    canvas = Image.new('RGBA', (1200, 630), tuple(int(background[i:i + 2], 16) for i in (1, 3, 5)) + (255,))
+    logo = Image.open(BRAND_DIR / 'logo-lockup-reversed.png').convert('RGBA')
+    width = 880  # leaves generous margins so nothing is cropped by any app
+    logo = logo.resize((width, round(logo.height * width / logo.width)), Image.LANCZOS)
+    canvas.alpha_composite(logo, ((1200 - logo.width) // 2, (630 - logo.height) // 2))
+    canvas.convert('RGB').save(out, optimize=True)
+
+
 def export_brand():
     BRAND_DIR.mkdir(parents=True, exist_ok=True)
     for src, dest in BRAND_FILES.items():
@@ -305,6 +318,7 @@ def export_brand():
     app_icon_png(512, True, BRAND_DIR / 'logo-app-icon-512.png')
     for name, width in (('logo-lockup', 2400), ('logo-lockup-reversed', 2400), ('logo-mark', 1200), ('logo-mark-mono', 1200)):
         svg_to_png(BRAND_DIR / f'{name}.svg', BRAND_DIR / f'{name}.png', width)
+    social_preview(BRAND_DIR / 'social-preview.png')
     print('wrote', len(list(BRAND_DIR.iterdir())), 'files to', BRAND_DIR)
 
 

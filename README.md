@@ -60,6 +60,7 @@ The logo is the "seedling" design (two leaves on a stem), in `public/brand/`:
 | `logo-app-icon.svg` / `logo-app-icon-light.svg` | The icon on a rounded square (dark or light). Used for the favicon. |
 | `logo-app-icon-512.png` | 512px PNG for places that cannot use SVG, such as an Instagram profile picture. |
 | `apple-touch-icon.png` | 180px icon for iPhone home screens. |
+| `social-preview.png` | 1200 x 630 image shown when a link to the site is shared (WhatsApp, iMessage, Facebook, LinkedIn): the white logo on olive. Set in `BaseLayout.astro`; change the colour in `build_logo.py`. |
 
 The words in the SVGs are outlines of the site's fonts, so they look the same anywhere with no fonts installed. Use the toggles in `src/data/site.ts` to show the logo in the header, the footer and the favicon independently; anything switched off falls back to the plain-text name (or the original leaf favicon). Jamie's Word brand guide and letter/document template are in `design/brand/` (see its README). To change the design, edit `design/logo/build_logo.py` (it lists what it needs at the top) and rerun it. `design/logo/preview.html` shows all the options considered.
 
