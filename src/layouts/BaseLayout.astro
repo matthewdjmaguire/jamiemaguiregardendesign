@@ -23,7 +23,17 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {
+      site.logo.favicon ? (
+        <>
+          <link rel="icon" href="/brand/logo-app-icon.svg" type="image/svg+xml" />
+          <link rel="icon" href="/brand/logo-app-icon-512.png" type="image/png" sizes="512x512" />
+          <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+        </>
+      ) : (
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+      )
+    }
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.business} />
     <meta property="og:title" content={pageTitle} />

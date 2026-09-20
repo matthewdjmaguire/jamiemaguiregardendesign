@@ -60,6 +60,10 @@ a:hover { color: var(--olive-900); }
 .brand { font-family: var(--font-heading); font-size: 1.6rem; font-weight: 500; color: var(--ink); text-decoration: none; line-height: 1.1; }
 .brand:hover { color: var(--olive-700); }
 .brand small { display: block; font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.brand--logo { display: block; line-height: 0; }
+.brand-logo { height: 4rem; width: auto; }
+.brand-logo--reversed { display: none; }
+@media (max-width: 760px) { .brand-logo { height: 3.25rem; } }
 .nav-list { display: flex; gap: var(--space-4); list-style: none; margin: 0; padding: 0; }
 .nav-list a {
   position: relative; display: inline-block; padding: 0.4rem 0; color: var(--ink); text-decoration: none;
@@ -97,6 +101,9 @@ a:hover { color: var(--olive-900); }
 [data-header='overlay']:has(main > .hero:first-child) .brand small,
 [data-header='overlay']:has(main > .hero:first-child) .nav-list a { color: var(--white); }
 [data-header='overlay']:has(main > .hero:first-child) .brand:hover { color: var(--sage-300); }
+/* Over a photo the header uses the white version of the logo. */
+[data-header='overlay']:has(main > .hero:first-child) .brand-logo--colour { display: none; }
+[data-header='overlay']:has(main > .hero:first-child) .brand-logo--reversed { display: block; }
 [data-header='overlay']:has(main > .hero:first-child) .nav-list a::after { background: var(--white); }
 [data-header='overlay']:has(main > .hero:first-child) .nav-toggle { border-color: var(--white); color: var(--white); }
 [data-header='overlay']:has(main > .hero:first-child) .site-header :focus-visible { outline-color: var(--white); }
@@ -214,6 +221,7 @@ a:hover { color: var(--olive-900); }
 .site-footer h2 { font-size: var(--text-lg); color: var(--white); }
 .site-footer ul { list-style: none; margin: 0; padding: 0; }
 .site-footer li { margin-bottom: 0.4rem; }
+.footer-lockup { display: block; height: 3.75rem; width: auto; margin-bottom: var(--space-2); }
 .footer-logo { background: var(--white); padding: var(--space-2); display: inline-block; }
 .lcgd-badge { height: 8.5rem; width: auto; }
 .footer-logo .lcgd-badge { height: 7.5rem; }

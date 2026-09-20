@@ -11,6 +11,9 @@ export type HeaderStyle = 'solid' | 'overlay';
 export const site = {
   headerStyle: 'overlay' as HeaderStyle,
   reviewMode: true,
+  // logo: where the logo image is used. Switch any of these off to fall back to the plain-text name
+  // (header, footer) or the simple leaf icon (favicon). Files live in public/brand/.
+  logo: { header: true, footer: true, favicon: true },
   name: 'Jamie Maguire',
   business: 'Jamie Maguire Garden Design',
   url: 'https://jamiemaguiregardendesign.com',

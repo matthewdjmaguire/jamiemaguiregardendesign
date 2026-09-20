@@ -9,7 +9,13 @@ const year = new Date().getFullYear();
   <div class="container">
     <div class="footer-grid">
       <div>
-        <h2>{site.business}</h2>
+        {
+          site.logo.footer ? (
+            <img class="footer-lockup" src="/brand/logo-lockup-reversed.svg" alt={site.business} width="235" height="60" />
+          ) : (
+            <h2>{site.business}</h2>
+          )
+        }
         <p>{site.tagline}. Serving {site.area}.</p>
       </div>
       <div>

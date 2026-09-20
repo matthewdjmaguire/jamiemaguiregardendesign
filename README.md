@@ -25,7 +25,8 @@ npm run dev        # http://localhost:4321
 
 | To change | Edit |
 |---|---|
-| Name, email, Instagram, menu, service names, **top-menu style** (`headerStyle`: `'solid'` or `'overlay'`) | `src/data/site.ts` |
+| Name, email, Instagram, menu, service names, **top-menu style** (`headerStyle`: `'solid'` or `'overlay'`), **logo on/off** (`logo.header`, `logo.footer`, `logo.favicon`) | `src/data/site.ts` |
+| The logo files | `public/brand/` (made by `design/logo/build_logo.py`) |
 | Colours, fonts sizes, spacing | `src/styles/tokens.css` |
 | Portfolio projects | `src/content/projects/*.md` (images in `src/assets/`) |
 | Page copy | `src/pages/*.astro` |
@@ -46,6 +47,20 @@ images:                       # first image is the cover
     alt: "Describe what the photo shows"
 ---
 ```
+
+## Logo
+
+The logo is the "seedling" design (two leaves on a stem), in `public/brand/`:
+
+| File | Use |
+|---|---|
+| `logo-lockup.svg` / `logo-lockup-reversed.svg` | Icon with the name to its right. Reversed (white) is for dark backgrounds or photos. |
+| `logo-mark.svg` / `logo-mark-mono.svg` | The icon alone, in two colours or one. |
+| `logo-app-icon.svg` / `logo-app-icon-light.svg` | The icon on a rounded square (dark or light). Used for the favicon. |
+| `logo-app-icon-512.png` | 512px PNG for places that cannot use SVG, such as an Instagram profile picture. |
+| `apple-touch-icon.png` | 180px icon for iPhone home screens. |
+
+The words in the SVGs are outlines of the site's fonts, so they look the same anywhere with no fonts installed. Use the toggles in `src/data/site.ts` to show the logo in the header, the footer and the favicon independently; anything switched off falls back to the plain-text name (or the original leaf favicon). To change the design, edit `design/logo/build_logo.py` (it lists what it needs at the top) and rerun it. `design/logo/preview.html` shows all the options considered.
 
 ## Review mode (for design feedback)
 
