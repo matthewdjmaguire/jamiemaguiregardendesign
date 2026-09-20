@@ -8,7 +8,8 @@ The leaf marks are drawn from Bezier curves below; the words are the site's own 
 and need no fonts installed.
 
 It also writes the CHOSEN option (see CHOSEN below) to public/brand/ under clean names, plus PNGs for
-places that cannot use SVG (Instagram profile picture, iPhone home screen). PNGs need Pillow as well.
+places that cannot use SVG (Word, email signatures, Instagram profile picture, iPhone home screen).
+PNGs need Pillow and PyMuPDF as well.
 """
 import io
 import math
@@ -287,12 +288,23 @@ def app_icon_png(px: int, rounded: bool, out: Path):
     img.resize((px, px), Image.LANCZOS).save(out, optimize=True)
 
 
+def svg_to_png(svg: Path, out: Path, width: int):
+    """Renders an SVG to a transparent PNG `width` pixels wide (PyMuPDF draws the vector outlines)."""
+    import pymupdf
+
+    page = pymupdf.open(svg)[0]
+    zoom = width / page.rect.width
+    page.get_pixmap(matrix=pymupdf.Matrix(zoom, zoom), alpha=True).save(out)
+
+
 def export_brand():
     BRAND_DIR.mkdir(parents=True, exist_ok=True)
     for src, dest in BRAND_FILES.items():
         (BRAND_DIR / dest).write_text((OUT / src).read_text())
     app_icon_png(180, False, BRAND_DIR / 'apple-touch-icon.png')
     app_icon_png(512, True, BRAND_DIR / 'logo-app-icon-512.png')
+    for name, width in (('logo-lockup', 2400), ('logo-lockup-reversed', 2400), ('logo-mark', 1200), ('logo-mark-mono', 1200)):
+        svg_to_png(BRAND_DIR / f'{name}.svg', BRAND_DIR / f'{name}.png', width)
     print('wrote', len(list(BRAND_DIR.iterdir())), 'files to', BRAND_DIR)
 
 
