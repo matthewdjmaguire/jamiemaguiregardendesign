@@ -3,11 +3,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import { site } from '../data/site';
 import { LIMITS } from '../lib/contact-validation.js';
-import heroImage from '../assets/photos/about.jpg';
+import { secondaryHero as heroImage } from '../data/images';
+import IconInstagram from '../components/IconInstagram.astro';
 ---
 
 <BaseLayout title="Contact" description="Get in touch with Jamie Maguire Garden Design to talk about your garden.">
-  <PageHero image={heroImage} eyebrow="Contact" title="Let's talk about your garden" />
+  <PageHero image={heroImage} eyebrow="Contact" />
 
   <section class="section">
     <div class="container split">
@@ -38,8 +39,8 @@ import heroImage from '../assets/photos/about.jpg';
       <aside class="panel">
         <h2>Prefer email?</h2>
         <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
-        <p>Instagram: <a href={site.instagram.url} rel="noopener">{site.instagram.handle}</a></p>
-        <p>Working across {site.area}.</p>
+        <p><a href={site.instagram.url} rel="noopener"><IconInstagram />{site.instagram.handle}</a></p>
+        <p>Working across {site.area}</p>
       </aside>
     </div>
   </section>

@@ -34,7 +34,7 @@ npm run dev        # http://localhost:4321
 
 ### Adding a project
 
-Add a Markdown file to `src/content/projects/` and put its photos in `src/assets/projects/`:
+Add a Markdown file to `src/content/projects/` and put its photos in `src/assets/photos/`:
 
 ```md
 ---
@@ -43,7 +43,7 @@ location: "London"
 summary: "One or two sentences."
 order: 1                      # lower numbers appear first
 images:                       # first image is the cover
-  - src: ../../assets/projects/courtyard-1.jpg
+  - src: ../../assets/photos/courtyard-1.jpg
     alt: "Describe what the photo shows"
 ---
 ```

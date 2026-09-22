@@ -5,17 +5,17 @@ import ProjectGrid from '../components/ProjectGrid.astro';
 import ProjectLightbox from '../components/ProjectLightbox.astro';
 import { getProjects } from '../lib/projects';
 import EnquiryBlock from '../components/EnquiryBlock.astro';
-import heroImage from '../assets/photos/hero.jpg';
+import { secondaryHero as heroImage } from '../data/images';
 
 const projects = await getProjects();
 ---
 
 <BaseLayout title="Projects" description="A selection of garden design projects by Jamie Maguire.">
-  <PageHero image={heroImage} eyebrow="Projects" title="Gardens I have designed" />
+  <PageHero image={heroImage} eyebrow="Recent projects" />
 
   <section class="section">
     <div class="container">
-      <p class="lead lead--narrow">Select an image to see it larger.</p>
+      <p class="lead lead--narrow lead--small">Select an image to see it larger.</p>
       <ProjectGrid projects={projects} lightbox />
       <ProjectLightbox projects={projects} />
     </div>

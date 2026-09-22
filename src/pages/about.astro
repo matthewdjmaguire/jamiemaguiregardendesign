@@ -2,42 +2,36 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import EnquiryBlock from '../components/EnquiryBlock.astro';
-import { site } from '../data/site';
-import aboutImage from '../assets/photos/about.jpg';
+import { secondaryHero as aboutImage } from '../data/images';
 import LcgdBadge from '../components/LcgdBadge.astro';
 ---
 
 <BaseLayout title="About" description="About Jamie Maguire: a garden designer trained at the London College of Garden Design, creating thoughtful, elegant and liveable gardens.">
-  <PageHero image={aboutImage} eyebrow="About" title="Design led by how a garden is lived in" />
+  <PageHero image={aboutImage} eyebrow="About" />
 
   <section class="section">
     <div class="container split">
       <div>
         <p class="lead">
-          I came to garden design after twenty years in commercial property law. Law taught me to listen carefully,
-          to manage detail and to keep a project moving. Design is where I wanted to use those skills.
-        </p>
-        <p>
-          I grew up in West Sussex, where a love of plants and landscape started early. I studied Design Technology at
-          A Level and History of Art at Edinburgh University, and later trained at the London College of Garden Design,
-          graduating with a Garden Design Diploma (Merit Commended).
-        </p>
-        <p>
-          My aim is to create thoughtful, elegant and liveable gardens that suit modern life and a changing
-          environment. That means classic design principles, sustainable materials, seasonal planting, biodiversity and
-          climate resilience, all grounded in horticultural knowledge.
+          After almost 20 years working as a commercial property lawyer in London, I retrained as a garden designer
+          with the London College of Garden Design, graduating with Merit Commended in 2026. Art and design have
+          always been a passion – I studied Design Technology for A Level and History of Art at Edinburgh University.
+          My years working as a solicitor taught me excellent project management, communication and problem solving
+          skills which I will now bring with me into this new career. I grew up in West Sussex and have loved being
+          out in nature for as long as I can remember, whether that was helping my parents in their garden or happily
+          wandering around RHS Wisley at the weekend with my four year old!
         </p>
         <div class="btn-row">
           <a class="btn" href="/contact">Get in touch</a>
-          <a class="btn btn--outline" href="/projects">See projects</a>
         </div>
       </div>
       <aside class="panel" aria-labelledby="at-a-glance">
         <h2 id="at-a-glance">At a glance</h2>
         <ul>
-          <li>Garden Design Diploma, London College of Garden Design (Merit Commended)</li>
-          <li>Previously two decades in commercial property law</li>
-          <li>Working across {site.area}</li>
+          <li>Garden Design Diploma 2026 (London College of Garden Design)</li>
+          <li>Over 15 years experience as a commercial property lawyer</li>
+          <li>Currently studying the RHS Level 2 with Royal Botanic Garden Edinburgh</li>
+          <li>Due to start the Planting Design Diploma at London College of Garden Design in January 2027</li>
         </ul>
         <p class="panel__logo"><LcgdBadge /></p>
       </aside>

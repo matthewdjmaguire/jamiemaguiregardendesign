@@ -1,34 +1,28 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
-import ProjectGrid from '../components/ProjectGrid.astro';
 import EnquiryBlock from '../components/EnquiryBlock.astro';
 import { site } from '../data/site';
-import { getProjects } from '../lib/projects';
-import hero from '../assets/photos/hero.jpg';
-
-const projects = (await getProjects()).slice(0, 6);
+import { homeHero as hero } from '../data/images';
 ---
 
 <BaseLayout>
-  <PageHero image={hero} size="large" eyebrow={`Garden design · ${site.area}`} title={site.tagline}>
-    <p>Gardens designed around how you live, the site you have and the wildlife you would like to welcome.</p>
-    <div class="btn-row">
-      <a class="btn btn--light" href="/contact">Enquire</a>
-      <a class="btn btn--light btn--outline" href="/services">View services</a>
-    </div>
+  <PageHero image={hero} size="large" eyebrow={['Garden and planting design', site.area]} title={site.tagline}>
+    <p>
+      Prior to retraining as a Garden Designer at the London College of Garden Design, I spent over 15 years working
+      as a commercial property lawyer so bring extensive project management experience, clarity of communication and
+      professionalism to everything I do.
+    </p>
   </PageHero>
 
   <section class="section section--sage">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Hello, I'm Jamie</p>
         <h2>Considered planting, sustainable materials, gardens made to be lived in.</h2>
         <p class="lead">
           I'm a garden designer trained at the London College of Garden Design. I create gardens that feel elegant,
           work hard through the seasons and look after the wildlife around them.
         </p>
-        <a href="/about">More about Jamie</a>
       </div>
     </div>
   </section>
@@ -56,13 +50,8 @@ const projects = (await getProjects()).slice(0, 6);
 
   <section class="section section--paper">
     <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Selected work</p>
-        <h2>Recent projects</h2>
-      </div>
-      <ProjectGrid projects={projects} />
-      <div class="btn-row">
-        <a class="btn btn--outline" href="/projects">View all projects</a>
+      <div class="btn-row btn-row--center">
+        <a class="btn btn--outline" href="/projects">View recent projects</a>
       </div>
     </div>
   </section>

@@ -1,6 +1,8 @@
 ---
 import { site } from '../data/site';
 import LcgdBadge from './LcgdBadge.astro';
+import IconEnvelope from './IconEnvelope.astro';
+import IconInstagram from './IconInstagram.astro';
 
 const year = new Date().getFullYear();
 ---
@@ -16,7 +18,6 @@ const year = new Date().getFullYear();
             <h2>{site.business}</h2>
           )
         }
-        <p>{site.tagline}. Serving {site.area}.</p>
       </div>
       <div>
         <h2>Explore</h2>
@@ -27,8 +28,8 @@ const year = new Date().getFullYear();
       <div>
         <h2>Get in touch</h2>
         <ul>
-          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-          <li><a href={site.instagram.url} rel="noopener">Instagram {site.instagram.handle}</a></li>
+          <li><a href={`mailto:${site.email}`}><IconEnvelope />{site.email}</a></li>
+          <li><a href={site.instagram.url} rel="noopener"><IconInstagram />{site.instagram.handle}</a></li>
         </ul>
       </div>
       <div>
