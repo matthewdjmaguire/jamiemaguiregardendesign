@@ -25,6 +25,7 @@
   --text-xl: clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem);
   --text-2xl: clamp(2.1rem, 1.6rem + 2.2vw, 3.2rem);
   --text-hero: clamp(2.6rem, 1.8rem + 4vw, 5rem);
+  --text-hero-sm: clamp(2.3rem, 1.8rem + 3vw, 4.2rem); /* Home headline, a size down from --text-hero */
 
   /* Spacing (8px base) */
   --space-1: 0.5rem;

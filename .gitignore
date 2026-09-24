@@ -24,3 +24,7 @@ pnpm-debug.log*
 .idea/
 .vercel
 .env*
+
+# design tooling output and Word lock files
+design/brand/build/
+~$*

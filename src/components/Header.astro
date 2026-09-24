@@ -12,7 +12,17 @@ const isCurrent = (href: string) =>
 
 <header class="site-header">
   <div class="container">
-    <a class="brand" href="/">{site.name}<small>Garden Design</small></a>
+    {
+      site.logo.header ? (
+        <a class="brand brand--logo" href="/">
+          {/* Two versions: the colour one on white, the reversed one when the header sits over a hero photo (see global.css). */}
+          <img class="brand-logo brand-logo--colour" src="/brand/logo-lockup.svg" alt={site.business} width="251" height="64" />
+          <img class="brand-logo brand-logo--reversed" src="/brand/logo-lockup-reversed.svg" alt={site.business} width="251" height="64" />
+        </a>
+      ) : (
+        <a class="brand" href="/">{site.name}<small>Garden Design</small></a>
+      )
+    }
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
     <nav class="site-nav" id="site-nav" aria-label="Main">
       <ul class="nav-list">

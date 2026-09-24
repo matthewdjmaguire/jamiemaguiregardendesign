@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ReviewMode from '../components/ReviewMode.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -12,6 +13,8 @@ interface Props {
 const { title, description = site.description } = Astro.props;
 const pageTitle = title ? `${title} | ${site.business}` : `${site.business} | ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, site.url).href;
+// Picture shown when the link is shared (WhatsApp, iMessage, Facebook...): the logo on a brand-colour background. Must be an absolute URL.
+const shareImage = new URL('/brand/social-preview.png', site.url).href;
 ---
 
 <!doctype html>
@@ -22,12 +25,30 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {
+      site.logo.favicon ? (
+        <>
+          <link rel="icon" href="/brand/logo-app-icon.svg" type="image/svg+xml" />
+          <link rel="icon" href="/brand/logo-app-icon-512.png" type="image/png" sizes="512x512" />
+          <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+        </>
+      ) : (
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+      )
+    }
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.business} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:image" content={shareImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.business} logo`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={shareImage} />
     <meta name="theme-color" content="#46583a" />
     <link rel="preload" href="/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/jost.woff2" as="font" type="font/woff2" crossorigin />
@@ -39,5 +60,6 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
       <slot />
     </main>
     <Footer />
+    {site.reviewMode && <ReviewMode />}
   </body>
 </html>
