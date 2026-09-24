@@ -7,21 +7,17 @@ import { homeHero as hero } from '../data/images';
 ---
 
 <BaseLayout>
-  <PageHero image={hero} size="large" eyebrow={['Garden and planting design', site.area]} title={site.tagline}>
-    <p>
-      Prior to retraining as a Garden Designer at the London College of Garden Design, I spent over 15 years working
-      as a commercial property lawyer so bring extensive project management experience, clarity of communication and
-      professionalism to everything I do.
-    </p>
-  </PageHero>
+  <PageHero image={hero} size="large" eyebrow="Garden and planting design" title={site.tagline} />
 
   <section class="section section--sage">
     <div class="container">
       <div class="section-head">
-        <h2>Considered planting, sustainable materials, gardens made to be lived in.</h2>
         <p class="lead">
-          I'm a garden designer trained at the London College of Garden Design. I create gardens that feel elegant,
-          work hard through the seasons and look after the wildlife around them.
+          I design elegant but liveable gardens that work hard throughout the seasons and look after the wildlife
+          around them. I aim to create spaces that are both beautiful and ecologically friendly, supporting the
+          pollinators and wildlife within them. Prior to retraining at the London College of Garden Design, I spent
+          over 15 years working as a commercial property lawyer so also bring extensive project management
+          experience, clarity of communication and professionalism to everything I do.
         </p>
       </div>
     </div>
@@ -30,7 +26,6 @@ import { homeHero as hero } from '../data/images';
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Services</p>
         <h2>How I can help</h2>
       </div>
       <div class="cards">
@@ -51,7 +46,7 @@ import { homeHero as hero } from '../data/images';
   <section class="section section--paper">
     <div class="container">
       <div class="btn-row btn-row--center">
-        <a class="btn btn--outline" href="/projects">View recent projects</a>
+        <a class="btn btn--outline btn--large" href="/projects">View recent projects</a>
       </div>
     </div>
   </section>

@@ -53,6 +53,7 @@ a:hover { color: var(--olive-900); }
 .btn--light.btn--outline { background: transparent; color: var(--white); }
 .btn--light.btn--outline:hover { background: var(--white); color: var(--ink); }
 .btn-row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.btn--large { padding: 1rem 2.25rem; font-size: var(--text-lg); }
 
 /* Header */
 .site-header { background: var(--white); border-bottom: 1px solid var(--sage-300); }
@@ -108,7 +109,7 @@ a:hover { color: var(--olive-900); }
 [data-header='overlay']:has(main > .hero:first-child) .nav-toggle { border-color: var(--white); color: var(--white); }
 [data-header='overlay']:has(main > .hero:first-child) .site-header :focus-visible { outline-color: var(--white); }
 /* The hero now starts at the very top, so push its text down by the header's height. */
-[data-header='overlay']:has(main > .hero:first-child) .hero__inner { padding-top: calc(5rem + clamp(3rem, 7vw, 5.5rem)); }
+[data-header='overlay']:has(main > .hero:first-child) .hero__inner { padding-top: calc(5rem + clamp(3.75rem, 8.5vw, 6.5rem)); }
 [data-header='overlay']:has(main > .hero--large:first-child) .hero__inner { padding-top: calc(5rem + clamp(4rem, 12vw, 9rem)); }
 @media (max-width: 760px) {
   /* The mobile dropdown is a white panel, so its links go back to dark. */
@@ -122,12 +123,18 @@ a:hover { color: var(--olive-900); }
 .hero__media { position: absolute; inset: 0; z-index: -2; }
 .hero__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
 .hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgb(30 40 27 / 0.72), rgb(30 40 27 / 0.5)); }
+/* Secondary-page banner (About, Services, Projects, Contact): lighter wash, and a touch taller
+   so the same cover-fit photo shows more of itself instead of being cropped in tight. */
+.hero--small::before { background: linear-gradient(90deg, rgb(30 40 27 / 0.45), rgb(30 40 27 / 0.28)); }
 .hero__inner { padding-block: clamp(4rem, 12vw, 9rem); max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
-.hero--small .hero__inner { padding-block: clamp(3rem, 7vw, 5.5rem); }
+.hero--small .hero__inner { padding-block: clamp(3.75rem, 8.5vw, 6.5rem); }
 .hero h1:not(.eyebrow) { font-size: var(--text-hero); max-width: 16ch; color: var(--white); }
+.hero--large h1:not(.eyebrow) { font-size: var(--text-hero-sm); }
 .hero--small h1:not(.eyebrow) { font-size: var(--text-2xl); max-width: 22ch; }
+.hero h1.eyebrow { font-size: var(--text-2xl); letter-spacing: 0.08em; }
 .hero p { max-width: 36rem; font-size: var(--text-lg); }
 .hero .eyebrow { color: var(--white); }
+.hero--large .eyebrow:not(h1) { font-size: var(--text-lg); margin-bottom: var(--space-3); }
 .hero:hover .hero__media img { transform: scale(1.04); }
 
 /* Service cards */
@@ -175,14 +182,9 @@ a:hover { color: var(--olive-900); }
 .panel ul { padding-left: 1.1rem; margin: 0; }
 .panel li { margin-bottom: var(--space-1); }
 
-/* Services detail + process steps */
+/* Services detail */
 .service-detail { padding-block: var(--space-4); border-top: 1px solid var(--sage-300); display: grid; gap: var(--space-3); }
 @media (min-width: 860px) { .service-detail { grid-template-columns: 1fr 2fr; } }
-.steps { list-style: none; counter-reset: step; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
-.steps li { counter-increment: step; border-top: 3px solid var(--sage-500); padding-top: var(--space-2); }
-.steps li::before { content: counter(step, decimal-leading-zero); font-family: var(--font-heading); font-size: 2rem; color: var(--olive-700); display: block; }
-.steps h3 { margin-bottom: 0.4rem; }
-.steps p { color: var(--muted); }
 
 /* Closing enquiry block */
 .enquiry { background: var(--sage-300); text-align: center; padding-block: var(--space-6); }
