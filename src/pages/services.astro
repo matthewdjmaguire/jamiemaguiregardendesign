@@ -5,6 +5,15 @@ import EnquiryBlock from '../components/EnquiryBlock.astro';
 import { secondaryHero as heroImage } from '../data/images';
 
 import { site } from '../data/site';
+import IconLightbulb from '../components/IconLightbulb.astro';
+import IconPlant from '../components/IconPlant.astro';
+import IconBlueprint from '../components/IconBlueprint.astro';
+
+const icons: Record<string, typeof IconLightbulb> = {
+  consultation: IconLightbulb,
+  'planting-design': IconPlant,
+  'full-garden-design': IconBlueprint,
+};
 ---
 
 <BaseLayout title="Services and Process" description="Garden design services from Jamie Maguire: consultation, planting design and full garden design, and how the process works.">
@@ -16,15 +25,23 @@ import { site } from '../data/site';
         <h2>Three ways to work together</h2>
       </div>
       {
-        site.services.map((s) => (
-          <div class="service-detail" id={s.id}>
-            <h3>{s.title}</h3>
-            <div>
-              <p>{s.body}</p>
-              <ul>{s.points.map((p) => <li>{p}</li>)}</ul>
+        site.services.map((s) => {
+          const Icon = icons[s.id];
+          return (
+            <div class="service-detail" id={s.id}>
+              <div class="service-detail__label">
+                <h3>{s.title}</h3>
+                <span class="service-icon">
+                  <Icon />
+                </span>
+              </div>
+              <div>
+                <p>{s.body}</p>
+                <ul>{s.points.map((p) => <li>{p}</li>)}</ul>
+              </div>
             </div>
-          </div>
-        ))
+          );
+        })
       }
     </div>
   </section>

@@ -1,34 +1,43 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import EnquiryBlock from '../components/EnquiryBlock.astro';
 import { secondaryHero as aboutImage } from '../data/images';
 import LcgdBadge from '../components/LcgdBadge.astro';
+import profilePhoto from '../assets/photos/jamie-profile.jpg';
 ---
 
 <BaseLayout title="About" description="About Jamie Maguire: a garden designer trained at the London College of Garden Design, creating thoughtful, elegant and liveable gardens.">
   <PageHero image={aboutImage} eyebrow="About" />
 
   <section class="section">
-    <div class="container split">
-      <div>
-        <p class="lead">
-          I spent over 15 years working as a commercial property lawyer in London before retraining as a garden
-          designer at the London College of Garden Design. Art and design have always been a passion of mine - I
-          studied Design Technology at A Level (winning a national prize for my final project) and a Masters degree
-          in History of Art at Edinburgh University. My years working as a solicitor taught me excellent project
-          management and communication skills as well as problem solving abilities which I will now bring with me
-          into this new career.
-        </p>
+    <div class="container">
+      <div class="split split--profile">
+        <div class="about-photo">
+          <Image src={profilePhoto} alt="Jamie Maguire in a garden, holding her London College of Garden Design diploma folder" widths={[400, 700, 1100]} sizes="(min-width: 860px) 33vw, 100vw" />
+        </div>
+        <div>
+          <p class="lead">
+            I spent over 15 years working as a commercial property lawyer in London before retraining as a garden
+            designer at the London College of Garden Design. Art and design have always been a passion of mine - I
+            studied Design Technology at A Level (winning a national prize for my final project) and a Masters degree
+            in History of Art at Edinburgh University. My years working as a solicitor taught me excellent project
+            management and communication skills as well as problem solving abilities which I will now bring with me
+            into this new career.
+          </p>
+        </div>
       </div>
-      <aside class="panel" aria-labelledby="at-a-glance">
-        <h2 id="at-a-glance" class="panel__heading">At a glance</h2>
-        <ul>
-          <li>Garden Design Diploma (Merit Commended) from the London College of Garden Design</li>
-          <li>Qualified lawyer</li>
-          <li>Currently studying RHS Level 2 (theory) at the Royal Botanic Garden, Edinburgh</li>
-          <li>Due to start the Planting Design Diploma at London College of Garden Design in January 2027</li>
-        </ul>
+      <aside class="panel panel--glance" aria-labelledby="at-a-glance">
+        <div>
+          <h2 id="at-a-glance" class="panel__heading">At a glance</h2>
+          <ul>
+            <li>Garden Design Diploma (Merit Commended) from the London College of Garden Design</li>
+            <li>Qualified lawyer</li>
+            <li>Currently studying RHS Level 2 (theory) at the Royal Botanic Garden, Edinburgh</li>
+            <li>Due to start the Planting Design Diploma at London College of Garden Design in January 2027</li>
+          </ul>
+        </div>
         <p class="panel__logo"><LcgdBadge /></p>
       </aside>
     </div>
