@@ -192,7 +192,7 @@ a:hover { color: var(--olive-900); }
 .panel--glance { margin-top: var(--space-5); display: grid; grid-template-columns: 1fr; gap: var(--space-4); align-items: center; }
 @media (min-width: 860px) { .panel--glance { grid-template-columns: 2fr 1fr; } }
 .panel--glance .panel__logo { margin: 0; text-align: center; }
-.panel--glance .lcgd-badge { height: 11rem; }
+.panel--glance .lcgd-badge { height: 16rem; }
 
 /* Services detail */
 .service-detail { padding-block: var(--space-4); border-top: 1px solid var(--sage-300); display: grid; gap: var(--space-3); }
