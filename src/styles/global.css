@@ -190,8 +190,8 @@ a:hover { color: var(--olive-900); }
 .panel li { margin-bottom: var(--space-1); }
 /* At-a-glance panel below the photo/bio row: same width as the row above, split 2:1 for text vs logo. */
 .panel--glance { margin-top: var(--space-5); display: grid; grid-template-columns: 1fr; gap: var(--space-4); align-items: center; }
-@media (min-width: 860px) { .panel--glance { grid-template-columns: 2fr 1fr; } }
-.panel--glance .panel__logo { margin: 0; text-align: center; }
+@media (min-width: 860px) { .panel--glance { grid-template-columns: 1fr auto; } }
+.panel--glance .panel__logo { margin: 0; text-align: right; }
 .panel--glance .lcgd-badge { height: 16rem; }
 
 /* Services detail */
