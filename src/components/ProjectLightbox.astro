@@ -30,7 +30,7 @@ const { projects } = Astro.props;
         </div>
         <div class="lightbox__meta">
           <h2>{project.data.title}</h2>
-          <p>{project.data.location} &middot; {project.data.summary}</p>
+          <p>{project.data.location}{project.data.summary && <> &middot; {project.data.summary}</>}</p>
         </div>
       </div>
     </dialog>

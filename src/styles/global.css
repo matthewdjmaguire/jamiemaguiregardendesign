@@ -179,6 +179,10 @@ a:hover { color: var(--olive-900); }
 @media (min-width: 860px) { .split { grid-template-columns: 1.4fr 1fr; align-items: start; } }
 .panel { background: var(--sage-100); padding: var(--space-4); border: 1px solid var(--sage-300); }
 .panel h2 { font-size: var(--text-lg); }
+.panel__heading {
+  font-family: var(--font-body); font-size: var(--text-sm); font-weight: 500; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--muted);
+}
 .panel ul { padding-left: 1.1rem; margin: 0; }
 .panel li { margin-bottom: var(--space-1); }
 

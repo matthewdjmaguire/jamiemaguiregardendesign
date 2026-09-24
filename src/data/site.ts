@@ -72,6 +72,7 @@ export const site = {
         'Detailed plans for construction and planting',
         'Guidance as the garden is built, including but not limited to project management, sourcing of plants and materials, assisting with setting out, as required',
         'Clear guidance on how to care for your completed garden through its first year, including a site visit should you have any follow up questions',
+        'Fees to be agreed',
       ],
     },
   ],
