@@ -1,7 +1,6 @@
 ---
 title: "Family Garden"
 location: "Hertfordshire"
-summary: "Description to follow."
 order: 1
 images:
   - src: ../../assets/photos/hertfordshire-1.jpg

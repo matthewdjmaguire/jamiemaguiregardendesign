@@ -1,7 +1,6 @@
 ---
 title: "Old Rectory"
 location: "North Yorkshire"
-summary: "Description to follow."
 order: 2
 images:
   - src: ../../assets/photos/yorkshire-rectory-1.jpg

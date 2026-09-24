@@ -10,7 +10,7 @@ const projects = defineCollection({
     z.object({
       title: z.string(),
       location: z.string(),
-      summary: z.string(),
+      summary: z.string().optional(), // shown after the location in the expanded view; omit if there's nothing to add yet
       order: z.number().default(100), // lower numbers appear first
       images: z.array(z.object({ src: image(), alt: z.string() })).min(1),
     }),

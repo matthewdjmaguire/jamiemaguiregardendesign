@@ -1,7 +1,6 @@
 ---
 title: "Wedding and Events Space"
 location: "South West London"
-summary: "Description to follow."
 order: 3
 images:
   - src: ../../assets/photos/wedding-sw-london-1.jpg
