@@ -5,6 +5,7 @@ import { site } from '../data/site';
 import { LIMITS } from '../lib/contact-validation.js';
 import { secondaryHero as heroImage } from '../data/images';
 import IconInstagram from '../components/IconInstagram.astro';
+import IconEnvelope from '../components/IconEnvelope.astro';
 ---
 
 <BaseLayout title="Contact" description="Get in touch with Jamie Maguire Garden Design to talk about your garden.">
@@ -38,7 +39,7 @@ import IconInstagram from '../components/IconInstagram.astro';
       </div>
       <aside class="panel">
         <h2>Prefer email?</h2>
-        <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+        <p><a href={`mailto:${site.email}`}><IconEnvelope />{site.email}</a></p>
         <p><a href={site.instagram.url} rel="noopener"><IconInstagram />{site.instagram.handle}</a></p>
         <p>Working across {site.area}</p>
       </aside>
